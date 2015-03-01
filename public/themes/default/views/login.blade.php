@@ -21,7 +21,7 @@
                 <input type="checkbox" value="remember-me" name="remember"> Remember me
             </label>
 
-            <button class="btn btn-primary btn-block" type="submit">Sign in</button>
+            <button style="border-color:#AAB2BD;" class="btn btn-normal btn-block" type="submit">Sign in</button>
 
 {{ Form::close() }}
 

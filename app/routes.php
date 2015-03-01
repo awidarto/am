@@ -36,6 +36,8 @@ Route::controller('activity', 'ActivityController');
 Route::controller('access', 'AccessController');
 Route::controller('apiaccess', 'ApiaccessController');
 
+Route::controller('importer', 'ImporterController');
+
 //report routes
 Route::controller('approvalreport', 'ApprovalreportController');
 

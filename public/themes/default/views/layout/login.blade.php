@@ -42,10 +42,16 @@
 
       .form-signin input {
         background-color: #FFF;
+        color: #000;
+        border-color: #FF9800;
       }
 
       .btn-primary, .btn-primary.active, .btn-primary.disabled, .btn-primary:active, .btn-primary[disabled] {
         border: thin solid #fff;
+      }
+
+      .help-block{
+        color: #fff;
       }
 
 

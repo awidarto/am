@@ -576,6 +576,13 @@ select.input-sm {
 			}
 		});
 
+        $('#select_all').on('ifChecked',function(){
+            $('.selector').prop('checked', true);
+        });
+
+        $('#select_all').on('ifUnchecked',function(){
+            $('.selector').prop('checked', false);
+        });
 
 		$('#confirmdelete').click(function(){
 

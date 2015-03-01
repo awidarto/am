@@ -240,7 +240,8 @@ class RackController extends AdminController {
         $this->heads = null;
 
         $this->fields = array(
-            array('SKU',array('kind'=>'text', 'callback'=>'namePic', 'query'=>'like','pos'=>'both','show'=>true)),
+            array('SKU',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
             array('itemDescription',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
             array('locationId',array('kind'=>'text','query'=>'like','pos'=>'both' ,'show'=>true)),
             array('locationName',array('kind'=>'text','query'=>'like','pos'=>'both' ,'show'=>true)),

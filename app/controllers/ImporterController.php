@@ -1,6 +1,6 @@
 <?php
 
-class ImporterController extends BaseController {
+class ImporterController extends AdminController {
 
     public $controller_name;
 
@@ -12,44 +12,51 @@ class ImporterController extends BaseController {
 
     public function __construct()
     {
+        parent::__construct();
 
-        date_default_timezone_set('Asia/Jakarta');
+        $this->controller_name = str_replace('Controller', '', get_class());
 
-        Former::framework($this->form_framework);
+        //$this->crumb = new Breadcrumb();
+        //$this->crumb->append('Home','left',true);
+        //$this->crumb->append(strtolower($this->controller_name));
+        $this->title = 'Data Import';
 
-        //$this->beforeFilter('auth', array('on'=>'get', 'only'=>array('getIndex','getAdd','getEdit') ));
-
-        $this->backlink = strtolower($this->controller_name);
+        $this->model = new Asset();
+        //$this->model = DB::collection('documents');
 
     }
 
     public function getIndex()
     {
-        return View::make(strtolower($this->controller_name).'.input')
-            ->with('title',$this->title)
-            ->with('input_name',$this->input_name)
-            ->with('submit',strtolower($this->controller_name).'/upload');
+        $controller_name = strtolower($this->controller_name);
+
+        $this->title = ($this->title == '')?Str::plural($this->controller_name):Str::plural($this->title);
+
+        Breadcrumbs::addCrumb($this->title,URL::to($controller_name));
+
+        return View::make('importer.importinput')
+            ->with('title', 'Assets Data')
+            //->with('input_name',$this->input_name)
+            ->with('importkey', $this->importkey)
+            ->with('back',strtolower($this->controller_name))
+            ->with('submit',strtolower($this->controller_name).'/uploadimport');
     }
 
-    public function getPreview($input = null)
+    public function postUploadimport()
     {
-        $sheets = file_get_contents(realpath($this->upload_dir).'/'.$input.'.json');
+        $file = Input::file('inputfile');
 
-        $sheets = json_decode($sheets,true);
+        $headindex = Input::get('headindex');
 
-        return View::make('tables.importpreview')->with('sheets',$sheets)
-            ->with('extract',strtolower($this->controller_name).'/extract');
+        $firstdata = Input::get('firstdata');
 
-    }
+        $importkey = (!is_null($this->importkey))?Input::get('importkey'):$this->importkey;
 
-    public function postUpload()
-    {
-
-        $file = Input::file($this->input_name);
+        //$importkey = $this->importkey;
 
         $rstring = str_random(15);
 
-        $destinationPath = realpath($this->upload_dir).'/'.$rstring;
+        $destinationPath = realpath('storage/upload').'/'.$rstring;
 
         $filename = $file->getClientOriginalName();
         $filemime = $file->getMimeType();
@@ -60,24 +67,166 @@ class ImporterController extends BaseController {
 
         $uploadSuccess = $file->move($destinationPath, $filename);
 
-        $sheets = Excel::load($destinationPath.'/'.$filename)->calculate()->toArray();
+        $fileitems = array();
 
-        $newsheets = array();
-        foreach($sheets as $name=>$sheet){
-            $newrows = array();
-            foreach ($sheet as $row) {
-                if(implode('',$row) != '' ){
-                    $rstr = str_random(5);
-                    $newrows[$rstr] = $row;
+        if($uploadSuccess){
+
+            $xlsfile = realpath('storage/upload').'/'.$rstring.'/'.$filename;
+
+            //$imp = Excel::load($xlsfile)->toArray();
+
+            $imp = array();
+
+            Excel::load($xlsfile,function($reader) use (&$imp){
+                $imp = $reader->toArray();
+            })->get();
+
+            $headrow = $imp[$headindex - 1];
+
+            //print_r($headrow);
+
+            $firstdata = $firstdata - 1;
+
+            $imported = array();
+
+            $sessobj = new Importsession();
+
+            $sessobj->heads = array_values($headrow);
+            $sessobj->isHead = 1;
+            $sessobj->sessId = $rstring;
+            $sessobj->save();
+
+            for($i = $firstdata; $i < count($imp);$i++){
+
+                $rowitem = $imp[$i];
+
+                $imported[] = $rowitem;
+
+                $sessobj = new Importsession();
+
+                $rowtemp = array();
+                foreach($rowitem as $k=>$v){
+                    $sessobj->{ $headrow[$k] } = $v;
+                    $rowtemp[$headrow[$k]] = $v;
                 }
+                $rowitem = $rowtemp;
+
+                $sessobj->sessId = $rstring;
+                $sessobj->isHead = 0;
+                $sessobj->save();
+
             }
 
-            $newsheets[$name] = $newrows;
         }
 
-        file_put_contents(realpath($this->upload_dir).'/'.$rstring.'.json', json_encode($newsheets));
+        $this->backlink = strtolower($this->controller_name);
 
-        return Redirect::to(strtolower($this->controller_name).'/preview/'.$rstring);
+        $commit_url = $this->backlink.'/commit/'.$rstring;
+
+        return Redirect::to($commit_url);
+
+    }
+
+    public function getCommit($sessid)
+    {
+        $heads = Importsession::where('sessId','=',$sessid)
+            ->where('isHead','=',1)
+            ->first();
+
+        $heads = $heads['heads'];
+
+        $imports = Importsession::where('sessId','=',$sessid)
+            ->where('isHead','=',0)
+            ->get();
+
+        $headselect = array();
+
+        foreach ($heads as $h) {
+            $headselect[$h] = $h;
+        }
+
+        $title = $this->controller_name;
+
+        $submit = strtolower($this->controller_name).'/commit/'.$sessid;
+
+        $controller_name = strtolower($this->controller_name);
+
+        $this->title = ($this->title == '')?Str::plural($this->controller_name):Str::plural($this->title);
+
+        Breadcrumbs::addCrumb($this->title,URL::to($controller_name));
+
+        Breadcrumbs::addCrumb('Import '.$this->title,URL::to($controller_name.'/import'));
+
+        Breadcrumbs::addCrumb('Preview',URL::to($controller_name.'/import'));
+
+        return View::make('shared.commitselect')
+            ->with('title',$title)
+            ->with('submit',$submit)
+            ->with('headselect',$headselect)
+            ->with('heads',$heads)
+            ->with('back',$controller_name.'/import')
+            ->with('imports',$imports);
+    }
+
+    public function postCommit($sessid)
+    {
+        $in = Input::get();
+
+        $importkey = $in['edit_key'];
+
+        $selector = $in['selector'];
+
+        $edit_selector = isset($in['edit_selector'])?$in['edit_selector']:array();
+
+        foreach($selector as $selected){
+            $rowitem = Importsession::find($selected)->toArray();
+
+            $do_edit = in_array($selected, $edit_selector);
+
+            if($importkey != '' && !is_null($importkey) && isset($rowitem[$importkey]) && $do_edit ){
+                $obj = $this->model
+                    ->where($importkey, 'exists', true)
+                    ->where($importkey, '=', $rowitem[$importkey])->first();
+
+                if($obj){
+
+                    foreach($rowitem as $k=>$v){
+                        if($v != ''){
+                            $obj->{$k} = $v;
+                        }
+                    }
+
+                    $obj->save();
+                }else{
+
+                    unset($rowitem['_id']);
+                    $rowitem['createdDate'] = new MongoDate();
+                    $rowitem['lastUpdate'] = new MongoDate();
+
+                    $rowitem = $this->beforeImportCommit($rowitem);
+
+                    $this->model->insert($rowitem);
+                }
+
+
+            }else{
+
+                unset($rowitem['_id']);
+                $rowitem['createdDate'] = new MongoDate();
+                $rowitem['lastUpdate'] = new MongoDate();
+
+                $rowitem = $this->beforeImportCommit($rowitem);
+
+                $this->model->insert($rowitem);
+
+            }
+
+
+        }
+
+        $this->backlink = strtolower($this->controller_name);
+
+        return Redirect::to($this->backlink);
 
     }
 
