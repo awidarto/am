@@ -53,6 +53,21 @@
             </li>
             @endif
 
+            @if(Ks::can('view','import'))
+
+            <li class="dropdown">
+                <a href="" data-toggle="dropdown" class="dropdown-toggle" role="button" aria-expanded="false">
+                    <i class="fa fa-file"></i> Data <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="{{ sa('importer') }}" >
+                        <a href="{{ URL::to('importer') }}" class="{{ sa('importer') }}" ><i class="fa fa-upload"></i> Import</a>
+                    </li>
+                </ul>
+            </li>
+
+            @endif
+
             @if(Ks::can('view','approval'))
 
             <li class="dropdown">
