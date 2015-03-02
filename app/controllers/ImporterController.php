@@ -44,6 +44,10 @@ class ImporterController extends AdminController {
 
     public function postUploadimport()
     {
+        $locationId = Input::get('locationId');
+
+        $locationName = $this->locationName($locationId);
+
         $file = Input::file('inputfile');
 
         $headindex = Input::get('headindex');
@@ -78,42 +82,78 @@ class ImporterController extends AdminController {
             $imp = array();
 
             Excel::load($xlsfile,function($reader) use (&$imp){
-                $imp = $reader->toArray();
+                $imp = $reader->get();
             })->get();
 
-            $headrow = $imp[$headindex - 1];
-
-            //print_r($headrow);
-
-            $firstdata = $firstdata - 1;
-
             $imported = array();
+            foreach($imp as $sheet){
+
+                $rackName = trim($sheet->getTitle());
+                $rackId = $this->rackId($rackName, $locationId, $locationName);
+
+                print $rackId.' - '.$rackName.' - '.$locationId.' - '.$locationName."\r\n";
+
+                $i = 0;
+                $heads = array();
+                foreach($sheet as $rows){
+                    if($i == $headindex){
+                        $heads = array();
+                        foreach($rows as $r){
+                            $heads[] = $r;
+                        }
+                    }
+
+                    if($i >= $firstdata){
+
+                        $row = array();
+
+                        $y = 0;
+                        foreach($rows as $r){
+                            $row[ $heads[$y] ] = $r;
+                            $y++;
+                        }
+
+                        $add = array();
+                        $add['locationName'] = $locationName;
+                        $add['locationId'] = $locationId;
+                        $add['rackId'] = $rackId;
+
+                        $row = array_merge($add,$row);
+
+                        $imported[] = $row;
+                    }
+
+                    $i++;
+                }
+
+            }
+
+            $hadd = array(
+                        'locationName',
+                        'locationId',
+                        'rackId'
+                    );
+
+            $heads = array_merge($hadd,$heads);
+
+            print_r($heads);
+            print_r($imported);
+
+            //die();
 
             $sessobj = new Importsession();
 
-            $sessobj->heads = array_values($headrow);
+            $sessobj->heads = $heads;
             $sessobj->isHead = 1;
             $sessobj->sessId = $rstring;
             $sessobj->save();
 
-            for($i = $firstdata; $i < count($imp);$i++){
+            foreach($imported as $import){
 
-                $rowitem = $imp[$i];
+                $import['isHead'] = 0;
+                $import['sessId'] = $rstring;
 
-                $imported[] = $rowitem;
-
-                $sessobj = new Importsession();
-
-                $rowtemp = array();
-                foreach($rowitem as $k=>$v){
-                    $sessobj->{ $headrow[$k] } = $v;
-                    $rowtemp[$headrow[$k]] = $v;
-                }
-                $rowitem = $rowtemp;
-
-                $sessobj->sessId = $rstring;
-                $sessobj->isHead = 0;
-                $sessobj->save();
+                Importsession::insert($import);
 
             }
 
@@ -145,6 +185,11 @@ class ImporterController extends AdminController {
             $headselect[$h] = $h;
         }
 
+        $vl = $this->validateData($imports->toArray());
+
+        $dbval = $vl['db'];
+        $inval = $vl['in'];
+
         $title = $this->controller_name;
 
         $submit = strtolower($this->controller_name).'/commit/'.$sessid;
@@ -159,11 +204,13 @@ class ImporterController extends AdminController {
 
         Breadcrumbs::addCrumb('Preview',URL::to($controller_name.'/import'));
 
-        return View::make('shared.commitselect')
+        return View::make('importer.commitselect')
             ->with('title',$title)
             ->with('submit',$submit)
             ->with('headselect',$headselect)
             ->with('heads',$heads)
+            ->with('dbval',$dbval)
+            ->with('inval',$inval)
             ->with('back',$controller_name.'/import')
             ->with('imports',$imports);
     }
@@ -230,6 +277,29 @@ class ImporterController extends AdminController {
 
     }
 
+    public function validateData($items)
+    {
+        $assetnames = array();
+        foreach($items as $item){
+            $assetnames[] = $item['SKU'];
+        }
+
+        $namecount = array_count_values($assetnames);
+
+        $dbval = array();
+        foreach($items as $item){
+            $dbval[$item['SKU']] = Asset::where('SKU',$item['SKU'])->count();
+        }
+
+        return array( 'in' => $namecount, 'db'=>$dbval );
+
+    }
+
+    public function beforeImportCommit($rowitem)
+    {
+        return $rowitem;
+    }
+
     public function postExtract()
     {
         $heads = Input::get('ext');
@@ -240,6 +310,40 @@ class ImporterController extends AdminController {
         file_put_contents(realpath($this->upload_dir).'/heads.json', json_encode($heads));
 
         return Response::json(array('status'=>'OK'));
+    }
+
+    private function locationName($locationId){
+        $loc = Assetlocation::find($locationId);
+        return $loc->name;
+    }
+
+    private function rackId($rackName, $locationId, $locationName){
+        $rack = Rack::where('SKU',$rackName)
+            ->where('locationId',$locationId)
+            ->first();
+
+        if($rack){
+            return $rack->_id;
+        }else{
+            $rackdata = array (
+                    'SKU' => $rackName,
+                    'createdDate' => new MongoDate(),
+                    'defaultpic' => '',
+                    'defaultpictures' => array(),
+                    'files' => array (),
+                    'itemDescription' => 'New Rack - '.$rackName,
+                    'lastUpdate' => new MongoDate(),
+                    'locationId' => $locationId,
+                    'locationName' => $locationName,
+                    'status' => 'active',
+                    'tagArray' => array (),
+                    'tags' => ''
+                );
+
+            $rackId = Rack::insertGetId($rackdata);
+
+            return $rackId;
+        }
     }
 
     public function missingMethod($param = array())

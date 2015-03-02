@@ -37,15 +37,19 @@
         <div class="col-md-4">
             {{ Former::select('edit_key')->label('Edit Key')->options($headselect)->id('importkey')->class('form-control importkey')->help('select to set which field used for update id') }}
         </div>
-        <div class="col-md-5" style="padding-top:25px;">
+        <div class="col-md-3" style="padding-top:12px;">
             {{ Former::submit('Commit Import')->id('execute')->class('btn btn-primary') }}&nbsp;&nbsp;
             {{ HTML::link($back,'Cancel',array('class'=>'btn'))}}
+        </div>
+        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="padding-top:22px;">
+            <span class="badge badge-primary">Duplicated in this import</span>
+            <br /><br />
+            <span class="badge badge-danger">Already exists in database</span>
         </div>
     </div>
 </div>
 <div class="row">
     <div class="col-md-12">
-
 
         <table class="table table-condensed">
             <thead>
@@ -82,6 +86,12 @@
                     @foreach($row as $d)
                         <td>
                             {{ $d }}
+                            @if(isset($inval[$d]) && $inval[$d] > 1 )
+                                <span class="badge badge-primary">{{ $inval[$d] - 1}}</span>
+                            @endif
+                            @if(isset($dbval[$d]) && $dbval[$d] > 0)
+                                <span class="badge badge-danger">{{ $dbval[$d]}}</span>
+                            @endif
                         </td>
                     @endforeach
                 </tr>

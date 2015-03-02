@@ -14,8 +14,8 @@
 
                 {{ Former::hidden( 'controller',$back ) }}
                 {{ Former::hidden( 'importkey',$importkey ) }}
-                {{ Former::text('headindex','Row containing header')->class('form-control')->value(2) }}
-                {{ Former::text('firstdata','Data starting at row')->class('form-control')->value(3) }}
+                {{ Former::text('headindex','Row containing header')->class('form-control')->value(1) }}
+                {{ Former::text('firstdata','Data starting at row')->class('form-control')->value(2) }}
             </div>
         </div>
 
