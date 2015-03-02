@@ -136,8 +136,8 @@ class ImporterController extends AdminController {
 
             $heads = array_merge($hadd,$heads);
 
-            print_r($heads);
-            print_r($imported);
+            //print_r($heads);
+            //print_r($imported);
 
             //die();
 
