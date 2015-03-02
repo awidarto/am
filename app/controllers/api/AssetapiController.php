@@ -66,10 +66,13 @@ class AssetapiController extends \BaseController {
                         unset($dp['temp_dir']);
                     }
 
-                    foreach($dp as $k=>$v){
-                        $name = 'picture'.str_replace(' ', '', ucwords( str_replace('_', ' ', $k) ));
-                        $assets[$i]->{$name} = $v;
+                    if(is_array($dp)){
+                        foreach($dp as $k=>$v){
+                            $name = 'picture'.str_replace(' ', '', ucwords( str_replace('_', ' ', $k) ));
+                            $assets[$i]->{$name} = $v;
+                        }
                     }
+
                     unset($assets[$i]->defaultpictures);
 
                 }else{
