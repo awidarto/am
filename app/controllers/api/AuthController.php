@@ -133,7 +133,9 @@ class AuthController extends \Controller {
                         unset($userarray['_token']);
                         unset($userarray['session_key']);
 
+                        /*
                         $userdata = array();
+
                         $userdata['createdDate'] = $userarray['createdDate'];
                         $userdata['email'] = $userarray['email'];
                         $userdata['firstname'] = $userarray['firstname'];
@@ -145,9 +147,9 @@ class AuthController extends \Controller {
                         $userdata['sessionKey'] = $userarray['sessionKey'];
                         $userdata['updatedAt'] = $userarray['updatedAt'];
                         $userdata['mongoid'] = $userarray['mongoid'];
+                        */
 
-
-                        $retVal = array_merge(array("status" => "OK", "msg" => "Login Success.", "key" => $sessionKey), $userdata) ;
+                        $retVal = array_merge(array("status" => "OK", "msg" => "Login Success.", "key" => $sessionKey), $userarray) ;
 
                         $actor = $user->fullname.' - '.$user->email;
                         \Event::fire('log.api',array($this->controller_name, 'login' ,$actor,'logged in'));
