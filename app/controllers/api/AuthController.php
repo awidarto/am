@@ -136,7 +136,7 @@ class AuthController extends \Controller {
 
                         $userdata = array();
 
-                        $userdata['createdDate'] = $userarray['createdDate'];
+                        $userdata['createdDate'] = date( 'Y-m-d H:i:s', $userarray['createdDate']->sec );
                         $userdata['email'] = $userarray['email'];
                         $userdata['firstname'] = $userarray['firstname'];
                         $userdata['fullname'] = $userarray['fullname'];
