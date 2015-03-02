@@ -134,7 +134,7 @@ class AuthController extends \Controller {
                         unset($userarray['session_key']);
 
                         $userdata = array();
-                        $userdata['status'] = $userarray['status'];
+                        $userdata['status'] = 'active';
                         $userdata['msg'] = $userarray['msg'];
                         $userdata['key'] = $userarray['key'];
                         $userdata['createdDate'] = $userarray['createdDate'];
