@@ -133,8 +133,24 @@ class AuthController extends \Controller {
                         unset($userarray['_token']);
                         unset($userarray['session_key']);
 
+                        $userdata = array();
+                        $userdata['status'] = $userarray['status'];
+                        $userdata['msg'] = $userarray['msg'];
+                        $userdata['key'] = $userarray['key'];
+                        $userdata['createdDate'] = $userarray['createdDate'];
+                        $userdata['email'] = $userarray['email'];
+                        $userdata['firstname'] = $userarray['firstname'];
+                        $userdata['fullname'] = $userarray['fullname'];
+                        $userdata['avatar'] = $userarray['avatar'];
+                        $userdata['gender'] = $userarray['gender'];
+                        $userdata['lastUpdate'] = $userarray['lastUpdate'];
+                        $userdata['lastname'] = $userarray['lastname'];
+                        $userdata['sessionKey'] = $userarray['sessionKey'];
+                        $userdata['updatedAt'] = $userarray['updatedAt'];
+                        $userdata['mongoid'] = $userarray['mongoid'];
 
-                        $retVal = array_merge(array("status" => "OK", "msg" => "Login Success.", "key" => $sessionKey), $userarray) ;
+
+                        $retVal = array_merge(array("status" => "OK", "msg" => "Login Success.", "key" => $sessionKey), $userdata) ;
 
                         $actor = $user->fullname.' - '.$user->email;
                         \Event::fire('log.api',array($this->controller_name, 'login' ,$actor,'logged in'));
