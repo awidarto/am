@@ -139,7 +139,7 @@ class AuthController extends \Controller {
                         $userdata['firstname'] = $userarray['firstname'];
                         $userdata['fullname'] = $userarray['fullname'];
                         $userdata['avatar'] = $userarray['avatar'];
-                        $userdata['gender'] = $userarray['gender'];
+                        $userdata['gender'] = $userarray['salutation'];
                         $userdata['lastUpdate'] = $userarray['lastUpdate'];
                         $userdata['lastname'] = $userarray['lastname'];
                         $userdata['sessionKey'] = $userarray['sessionKey'];
