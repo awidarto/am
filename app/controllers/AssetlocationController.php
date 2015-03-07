@@ -242,7 +242,7 @@ class AssetlocationController extends AdminController {
 
         $this->fields = array(
             array('name',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            //array('_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
             array('slug',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
             array('venue',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
             array('address',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),

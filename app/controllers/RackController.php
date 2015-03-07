@@ -243,7 +243,7 @@ class RackController extends AdminController {
             array('SKU',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
             array('_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
             array('itemDescription',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('locationId',array('kind'=>'text','query'=>'like','pos'=>'both' ,'show'=>true)),
+            //array('locationId',array('kind'=>'text','query'=>'like','pos'=>'both' ,'show'=>true)),
             array('locationName',array('kind'=>'text','query'=>'like','pos'=>'both' ,'show'=>true)),
             array('tags',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
             array('createdDate',array('kind'=>'datetime','query'=>'like','pos'=>'both','show'=>true)),

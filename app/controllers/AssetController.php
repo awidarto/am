@@ -452,9 +452,9 @@ class AssetController extends AdminController {
         $this->heads = null;
 
         $this->fields = array(
-                array('locationId',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+                //array('locationId',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
                 array('locationName',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-                array('rackId',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+                //array('rackId',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
                 array('rackName',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
                 array('SKU',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
                 array('IP',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
