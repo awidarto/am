@@ -68,6 +68,7 @@ Route::group(array('prefix' => 'api/v1'), function (){
     Route::resource('location', 'Api\LocationapiController');
     Route::resource('rack', 'Api\RackapiController');
     Route::resource('asset', 'Api\AssetapiController');
+    Route::resource('assettype', 'Api\AssettypeapiController');
 });
 
 Route::get('tonumber',function(){
