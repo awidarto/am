@@ -118,7 +118,12 @@ class AssetapiController extends \BaseController {
 	 */
 	public function store()
 	{
-		//
+        $json = \Input::all();
+
+        \Dumper::insert($json);
+
+        return \Response::json(array('status'=>'OK'));
+
 	}
 
 
