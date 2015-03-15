@@ -122,7 +122,7 @@ class AssetapiController extends \BaseController {
 
         \Dumper::insert($json);
 
-        return \Response::json(array('status'=>'OK'));
+        return \Response::json(array('status'=>'OK', 'timestamp'=>time() ));
 
 	}
 
@@ -159,7 +159,7 @@ class AssetapiController extends \BaseController {
 
         \Dumper::insert($json);
 
-        return \Response::json(array('status'=>'OK'));
+        return \Response::json(array('status'=>'OK', 'timestamp'=>time() ));
 		//
 	}
 
@@ -172,7 +172,13 @@ class AssetapiController extends \BaseController {
 	 */
 	public function update($id)
 	{
-		//
+        $json = \Input::all();
+
+        $json['mode'] = 'edit';
+
+        \Dumper::insert($json);
+
+        return \Response::json(array('status'=>'OK', 'timestamp'=>time() ));
 	}
 
 
