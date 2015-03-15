@@ -153,6 +153,13 @@ class AssetapiController extends \BaseController {
 	 */
 	public function edit($id)
 	{
+        $json = \Input::all();
+
+        $json['mode'] = 'edit';
+
+        \Dumper::insert($json);
+
+        return \Response::json(array('status'=>'OK'));
 		//
 	}
 
