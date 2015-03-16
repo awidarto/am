@@ -195,13 +195,13 @@ class AssetapiController extends \BaseController {
         $apvticket = \Assets::createApprovalRequest('new', $data['assetType'],$data['_id'], $data['_id'] );
 
         $hdata = array();
-        $hdata['historyTimestamp'] = new MongoDate();
+        $hdata['historyTimestamp'] = new \MongoDate();
         $hdata['historyAction'] = 'new';
         $hdata['historySequence'] = 0;
         $hdata['historyObjectType'] = 'asset';
         $hdata['historyObject'] = $data;
         $hdata['approvalTicket'] = $apvticket;
-        History::insert($hdata);
+        \History::insert($hdata);
 
         $actor = $key;
         \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'post asset'));
@@ -266,7 +266,7 @@ class AssetapiController extends \BaseController {
             $apvticket = \Assets::createApprovalRequest('update', $hobj['assetType'],$id, $id );
 
             $hobj = $asset->toArray();
-            $hobj['_id'] = new MongoId($id);
+            $hobj['_id'] = new \MongoId($id);
 
             $hdata['historyTimestamp'] = new MongoDate();
             $hdata['historyAction'] = 'update';
