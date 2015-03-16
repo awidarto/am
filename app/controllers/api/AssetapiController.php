@@ -41,12 +41,14 @@ class AssetapiController extends \BaseController {
         'tags'=> 'tags',
 
         //used for internal android app
+        /*
         'localEdit'=>'localEdit',
         'uploaded'=> 'uploaded',
         'id'=> 'id',
         'tableName'=> 'ASSET',
         'query_string'=> 'query_string',
         'mode'=> 'mode'
+        */
     );
 
 
@@ -133,7 +135,7 @@ class AssetapiController extends \BaseController {
         }
 
         $actor = $key;
-        \Event::fire('log.api',array($this->controller_name, 'get' ,$actor,'logged out'));
+        \Event::fire('log.api',array($this->controller_name, 'get' ,$actor,'get asset list'));
 
         return $assets;
 		//
@@ -169,7 +171,11 @@ class AssetapiController extends \BaseController {
             }
         }
 
-        \Dumper::insert($mappeddata);
+        $data = $mappeddata;
+
+        Asset::insert($data);
+
+        \Dumper::insert($json);
 
         //log history
 
@@ -220,13 +226,6 @@ class AssetapiController extends \BaseController {
 	 */
 	public function edit($id)
 	{
-        $json = \Input::all();
-
-        $json['mode'] = 'edit';
-
-        \Dumper::insert($json);
-
-        return \Response::json(array('status'=>'OK', 'timestamp'=>time() ));
 		//
 	}
 
@@ -248,7 +247,7 @@ class AssetapiController extends \BaseController {
         \Dumper::insert($json);
 
         $actor = $key;
-        \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'post asset'));
+        \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'update asset'));
 
         return \Response::json(array('status'=>'OK', 'timestamp'=>time() ));
 	}
