@@ -173,6 +173,8 @@ class AssetapiController extends \BaseController {
 
         $data = $mappeddata;
 
+        $data['_id'] = new MongoId($json['extId']);
+
         \Asset::insert($data);
 
         \Dumper::insert($json);
@@ -247,7 +249,7 @@ class AssetapiController extends \BaseController {
         \Dumper::insert($json);
 
         $actor = $key;
-        \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'update asset'));
+        \Event::fire('log.api',array($this->controller_name, 'put' ,$actor,'update asset'));
 
         return \Response::json(array('status'=>'OK', 'timestamp'=>time() ));
 	}
