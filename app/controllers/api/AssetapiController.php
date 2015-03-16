@@ -269,7 +269,7 @@ class AssetapiController extends \BaseController {
 
             $hobj['_id'] = new \MongoId($id);
 
-            $hdata['historyTimestamp'] = new MongoDate();
+            $hdata['historyTimestamp'] = new \MongoDate();
             $hdata['historyAction'] = 'update';
             $hdata['historySequence'] = 0;
             $hdata['historyObjectType'] = 'asset';
