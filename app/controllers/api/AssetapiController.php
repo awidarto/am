@@ -259,7 +259,23 @@ class AssetapiController extends \BaseController {
         $asset = \Asset::find($id);
 
         if($asset){
-            $mappeddata = array();
+
+            //create history - before state
+
+            $apvticket = \Assets::createApprovalRequest('update', $hobj['assetType'],$id, $id );
+
+            $hobj = $asset->toArray();
+            $hobj['_id'] = new MongoId($id);
+
+            $hdata['historyTimestamp'] = new MongoDate();
+            $hdata['historyAction'] = 'update';
+            $hdata['historySequence'] = 0;
+            $hdata['historyObjectType'] = 'asset';
+            $hdata['historyObject'] = $hobj;
+            $hdata['approvalTicket'] = $apvticket;
+            \History::insert($hdata);
+
+            //update data fields
             foreach($json as $k=>$v){
                 if(isset($this->objmap[$k])){
                     $asset->{$this->objmap[$k]} = $v;
@@ -267,8 +283,23 @@ class AssetapiController extends \BaseController {
             }
 
             if( isset($asset->lastUpdate) && is_string($asset->lastUpdate)){
-                $asset->lastUpdate = new MongoDate( strtotime($asset->lastUpdate) );
+                $asset->lastUpdate = new MongoDate( strtotime($json['lastUpdate']) );
             }
+
+            $asset->save();
+
+            $hndata = $asset->toArray();
+            $hndata['_id'] = new MongoId($id);
+
+            $hdata = array();
+            $hdata['historyTimestamp'] = new MongoDate();
+            $hdata['historyAction'] = 'update';
+            $hdata['historySequence'] = 1;
+            $hdata['historyObjectType'] = 'asset';
+            $hdata['historyObject'] = $hndata;
+            $hdata['approvalTicket'] = '';
+            \History::insert($hdata);
+
 
             $actor = $key;
             \Event::fire('log.api',array($this->controller_name, 'put' ,$actor,'update asset'));
@@ -278,9 +309,9 @@ class AssetapiController extends \BaseController {
         }else{
 
             $actor = $key;
-            \Event::fire('log.api',array($this->controller_name, 'put' ,$actor,'update asset'));
+            \Event::fire('log.api',array($this->controller_name, 'put' ,$actor,'update asset failed'));
 
-            return \Response::json(array('status'=>'OK', 'timestamp'=>time() ));
+            return \Response::json(array('status'=>'ERR:NOTEXIST', 'timestamp'=>time() ));
 
         }
 
