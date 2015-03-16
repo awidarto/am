@@ -178,7 +178,7 @@ class Assets {
             $actor = 'mobile';
             $actorName = 'mobile';
         }else{
-            $actor = Auth::user()->_id,
+            $actor = Auth::user()->_id;
             $actorName = Auth::user()->fullname;
         }
 
