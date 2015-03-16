@@ -63,7 +63,7 @@ class ApiaccessController extends AdminController {
 
         //print $this->model->where('docFormat','picture')->get()->toJSON();
 
-        $this->title = 'Activity';
+        $this->title = 'API Access Log';
 
         return parent::getIndex();
 

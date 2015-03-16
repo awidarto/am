@@ -375,7 +375,7 @@ class AssetController extends AdminController {
 
     public function afterSave($data)
     {
-        $apvticket = Assets::createApprovalRequest('new', $data['assetType'],$data['_id'], $data['_id'] );
+        $apvticket = Assets::createApprovalRequest('new', $data['assetType'],$data['_id'], $data['_id'], 'user' );
 
         $hdata = array();
         $hdata['historyTimestamp'] = new MongoDate();
@@ -433,7 +433,7 @@ class AssetController extends AdminController {
         $hobj = Asset::find($id)->toArray();
         $hobj['_id'] = new MongoId($id);
 
-        $apvticket = Assets::createApprovalRequest('update', $hobj['assetType'],$id, $id );
+        $apvticket = Assets::createApprovalRequest('update', $hobj['assetType'],$id, $id , 'user');
 
         $hdata['historyTimestamp'] = new MongoDate();
         $hdata['historyAction'] = 'update';
