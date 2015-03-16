@@ -164,7 +164,12 @@ class AssetapiController extends \BaseController {
 
         $key = \Input::get('key');
 
+
         \Dumper::insert($json);
+
+        print_r($json);
+
+        die();
 
         $mappeddata = array();
         foreach($json as $k=>$v){
