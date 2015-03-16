@@ -173,7 +173,7 @@ class AssetapiController extends \BaseController {
 
         $data = $mappeddata;
 
-        Asset::insert($data);
+        \Asset::insert($data);
 
         \Dumper::insert($json);
 
