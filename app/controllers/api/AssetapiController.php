@@ -175,6 +175,14 @@ class AssetapiController extends \BaseController {
 
         $data['_id'] = new MongoId($json['extId']);
 
+        if( isset($data['createdDate']) && is_string($data['createdDate'])){
+            $data['createdDate'] = new MongoDate( strtotime($data['createdDate']) );
+        }
+
+        if( isset($data['lastUpdate']) && is_string($data['lastUpdate'])){
+            $data['lastUpdate'] = new MongoDate( strtotime($data['lastUpdate']) );
+        }
+
         \Asset::insert($data);
 
         \Dumper::insert($json);
@@ -248,10 +256,35 @@ class AssetapiController extends \BaseController {
 
         \Dumper::insert($json);
 
-        $actor = $key;
-        \Event::fire('log.api',array($this->controller_name, 'put' ,$actor,'update asset'));
+        $asset = \Asset::find($id);
 
-        return \Response::json(array('status'=>'OK', 'timestamp'=>time() ));
+        if($asset){
+            $mappeddata = array();
+            foreach($json as $k=>$v){
+                if(isset($this->objmap[$k])){
+                    $asset->{$this->objmap[$k]} = $v;
+                }
+            }
+
+            if( isset($asset->lastUpdate) && is_string($asset->lastUpdate)){
+                $asset->lastUpdate = new MongoDate( strtotime($asset->lastUpdate) );
+            }
+
+            $actor = $key;
+            \Event::fire('log.api',array($this->controller_name, 'put' ,$actor,'update asset'));
+
+            return \Response::json(array('status'=>'OK', 'timestamp'=>time() ));
+
+        }else{
+
+            $actor = $key;
+            \Event::fire('log.api',array($this->controller_name, 'put' ,$actor,'update asset'));
+
+            return \Response::json(array('status'=>'OK', 'timestamp'=>time() ));
+
+        }
+
+
 	}
 
 
