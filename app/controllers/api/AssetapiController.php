@@ -10,7 +10,7 @@ class AssetapiController extends \BaseController {
 
     public $controller_name = '';
 
-    $objmap = array(
+    public $objmap = array(
 
         'IP'=>'IP',
         'OS'=> 'OS',
