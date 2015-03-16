@@ -127,9 +127,13 @@ class AssetapiController extends \BaseController {
                     $assets[$i]->pictureBrc2 = '';
                     $assets[$i]->pictureBrc3 = '';
                 }
+                if( isset($assets[$i]->createdDate) && !is_string($assets[$i]->createdDate) ){
+                    $assets[$i]->createdDate = date('Y-m-d H:i:s',$assets[$i]->createdDate->sec);
+                }
 
-                $assets[$i]->createdDate = date('Y-m-d H:i:s',$assets[$i]->createdDate->sec);
-                $assets[$i]->lastUpdate = date('Y-m-d H:i:s',$assets[$i]->lastUpdate->sec);
+                if(isset($assets[$i]->lastUpdate) && !is_string($assets[$i]->lastUpdate)){
+                    $assets[$i]->lastUpdate = date('Y-m-d H:i:s',$assets[$i]->lastUpdate->sec);
+                }
 
 
         }
@@ -310,10 +314,53 @@ class AssetapiController extends \BaseController {
 
         }else{
 
+            $mappeddata = array();
+            foreach($json as $k=>$v){
+                if(isset($this->objmap[$k])){
+                    $mappeddata[ $this->objmap[$k] ] = $v;
+                }
+            }
+
+            $data = $mappeddata;
+
+            $data['_id'] = new \MongoId( $json['extId'] );
+
+            if( isset($data['createdDate']) && is_string($data['createdDate'])){
+                $data['createdDate'] = new \MongoDate( strtotime($data['createdDate']) );
+            }
+
+            if( isset($data['lastUpdate']) && is_string($data['lastUpdate'])){
+                $data['lastUpdate'] = new \MongoDate( strtotime($data['lastUpdate']) );
+            }
+
+            \Asset::insert($data);
+
+
+            //log history
+
+            //$data is the data after inserted
+
+            $apvticket = \Assets::createApprovalRequest('new', $data['assetType'],$data['_id'], $data['_id'] );
+
+            $hdata = array();
+            $hdata['historyTimestamp'] = new \MongoDate();
+            $hdata['historyAction'] = 'new';
+            $hdata['historySequence'] = 0;
+            $hdata['historyObjectType'] = 'asset';
+            $hdata['historyObject'] = $data;
+            $hdata['approvalTicket'] = $apvticket;
+            \History::insert($hdata);
+
+            $actor = $key;
+            \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'post asset'));
+
+            return \Response::json(array('status'=>'OK', 'timestamp'=>time() ));
+
+            /*
             $actor = $key;
             \Event::fire('log.api',array($this->controller_name, 'put' ,$actor,'update asset failed'));
-
             return \Response::json(array('status'=>'ERR:NOTEXIST', 'timestamp'=>time() ));
+            */
 
         }
 
