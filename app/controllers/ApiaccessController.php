@@ -12,7 +12,7 @@ class ApiaccessController extends AdminController {
         //$this->crumb->append('Home','left',true);
         //$this->crumb->append(strtolower($this->controller_name));
 
-        $this->model = new Activelog();
+        $this->model = new Apilog();
         //$this->model = DB::collection('documents');
 
     }

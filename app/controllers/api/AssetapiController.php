@@ -10,6 +10,46 @@ class AssetapiController extends \BaseController {
 
     public $controller_name = '';
 
+    $objmap = array(
+
+        'IP'=>'IP',
+        'OS'=> 'OS',
+        'PIC'=> 'PIC',
+        'PicEmail'=>'PicEmail',
+        'PicPhone'=>'PicPhone',
+        'SKU'=> 'SKU',
+        'assetType'=> 'assetType',
+        'brc1'=> 'brc1',
+        'brc2'=> 'brc2',
+        'brc3'=> 'brc3',
+        'brchead'=> 'brchead',
+        'contractNumber'=> 'contractNumber',
+        'createdDate'=> 'createdDate',
+        'defaultpic'=> 'defaultpic',
+        'extId'=> 'extId',
+        'hostName'=> 'hostName',
+        'itemDescription'=> 'itemDescription',
+        'lastUpdate'=> 'lastUpdate',
+        'locationId'=> 'locationId',
+        'owner'=> 'owner',
+        'pictureFullUrl'=> 'pictureFullUrl',
+        'pictureLargeUrl'=> 'pictureLargeUrl',
+        'pictureMediumUrl'=> 'pictureMediumUrl',
+        'pictureThumbnailUrl'=> 'pictureThumbnailUrl',
+        'rackId'=> 'rackId',
+        'status'=> 'status',
+        'tags'=> 'tags',
+
+        //used for internal android app
+        'localEdit'=>'localEdit',
+        'uploaded'=> 'uploaded',
+        'id'=> 'id',
+        'tableName'=> 'ASSET',
+        'query_string'=> 'query_string',
+        'mode'=> 'mode'
+    );
+
+
     public function  __construct()
     {
         //$this->model = "Member";
@@ -120,7 +160,34 @@ class AssetapiController extends \BaseController {
 	{
         $json = \Input::all();
 
-        \Dumper::insert($json);
+        $key = \Input::get('key');
+
+        $mappeddata = array();
+        foreach($json as $k=>$v){
+            if(isset($this->objmap[$k])){
+                $mappeddata[ $this->objmap[$k] ] = $v;
+            }
+        }
+
+        \Dumper::insert($mappeddata);
+
+        //log history
+
+        //$data is the data after inserted
+
+        $apvticket = Assets::createApprovalRequest('new', $data['assetType'],$data['_id'], $data['_id'] );
+
+        $hdata = array();
+        $hdata['historyTimestamp'] = new MongoDate();
+        $hdata['historyAction'] = 'new';
+        $hdata['historySequence'] = 0;
+        $hdata['historyObjectType'] = 'asset';
+        $hdata['historyObject'] = $data;
+        $hdata['approvalTicket'] = $apvticket;
+        History::insert($hdata);
+
+        $actor = $key;
+        \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'post asset'));
 
         return \Response::json(array('status'=>'OK', 'timestamp'=>time() ));
 
@@ -174,9 +241,14 @@ class AssetapiController extends \BaseController {
 	{
         $json = \Input::all();
 
+        $key = \Input::get('key');
+
         $json['mode'] = 'edit';
 
         \Dumper::insert($json);
+
+        $actor = $key;
+        \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'post asset'));
 
         return \Response::json(array('status'=>'OK', 'timestamp'=>time() ));
 	}
