@@ -175,7 +175,7 @@ class Assets {
         //assettype : any which one of registered asset Type
 
         if(is_null($actor)){
-            $actor = 'mobile',
+            $actor = 'mobile';
             $actorName = 'mobile';
         }else{
             $actor = Auth::user()->_id,
