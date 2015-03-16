@@ -173,14 +173,14 @@ class AssetapiController extends \BaseController {
 
         $data = $mappeddata;
 
-        $data['_id'] = new MongoId($json['extId']);
+        $data['_id'] = new \MongoId($json['extId']);
 
         if( isset($data['createdDate']) && is_string($data['createdDate'])){
-            $data['createdDate'] = new MongoDate( strtotime($data['createdDate']) );
+            $data['createdDate'] = new \MongoDate( strtotime($data['createdDate']) );
         }
 
         if( isset($data['lastUpdate']) && is_string($data['lastUpdate'])){
-            $data['lastUpdate'] = new MongoDate( strtotime($data['lastUpdate']) );
+            $data['lastUpdate'] = new \MongoDate( strtotime($data['lastUpdate']) );
         }
 
         \Asset::insert($data);
@@ -191,7 +191,7 @@ class AssetapiController extends \BaseController {
 
         //$data is the data after inserted
 
-        $apvticket = Assets::createApprovalRequest('new', $data['assetType'],$data['_id'], $data['_id'] );
+        $apvticket = \Assets::createApprovalRequest('new', $data['assetType'],$data['_id'], $data['_id'] );
 
         $hdata = array();
         $hdata['historyTimestamp'] = new MongoDate();
@@ -283,16 +283,16 @@ class AssetapiController extends \BaseController {
             }
 
             if( isset($asset->lastUpdate) && is_string($asset->lastUpdate)){
-                $asset->lastUpdate = new MongoDate( strtotime($json['lastUpdate']) );
+                $asset->lastUpdate = new \MongoDate( strtotime($json['lastUpdate']) );
             }
 
             $asset->save();
 
             $hndata = $asset->toArray();
-            $hndata['_id'] = new MongoId($id);
+            $hndata['_id'] = new \MongoId($id);
 
             $hdata = array();
-            $hdata['historyTimestamp'] = new MongoDate();
+            $hdata['historyTimestamp'] = new \MongoDate();
             $hdata['historyAction'] = 'update';
             $hdata['historySequence'] = 1;
             $hdata['historyObjectType'] = 'asset';
