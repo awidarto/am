@@ -175,7 +175,7 @@ class AssetapiController extends \BaseController {
 
         $data = $mappeddata;
 
-        $data['_id'] = new \MongoId($json['extId']);
+        $data['_id'] = new \MongoId( $json->extId );
 
         if( isset($data['createdDate']) && is_string($data['createdDate'])){
             $data['createdDate'] = new \MongoDate( strtotime($data['createdDate']) );
