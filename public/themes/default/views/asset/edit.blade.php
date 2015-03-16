@@ -49,13 +49,19 @@
 
         <h5>Pictures</h5>
         <?php
-            $fupload = new Fupload();
+            $fupload = new Wupload();
         ?>
-        {{ $fupload->id('imageupload')->title('Select Picture')->label('Upload Picture')
-            ->url('upload/asset')
+        {{ $fupload->id('imageupload')
+            ->ns('assetpic')
+            ->parentid($formdata['_id'])
+            ->parentclass('asset')
+            ->title('Select Picture')
+            ->label('Upload Picture')
+            ->url('upload/file')
             ->singlefile(false)
             ->prefix('asset')
-            ->multi(true)->make($formdata) }}
+            ->multi(true)
+            ->make($formdata) }}
 
 
 @stop

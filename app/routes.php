@@ -38,6 +38,8 @@ Route::controller('apiaccess', 'ApiaccessController');
 
 Route::controller('importer', 'ImporterController');
 
+Route::controller('img', 'ImgController');
+
 //report routes
 Route::controller('approvalreport', 'ApprovalreportController');
 

@@ -78,6 +78,10 @@ class AssetController extends AdminController {
 
         $asset = Asset::find($id);
 
+        $files = Uploaded::where('parent_id',$id)->where('parent_class','asset')->get();
+
+        $asset->files = $files->toArray();
+
         Breadcrumbs::addCrumb('Assets',URL::to( strtolower($this->controller_name) ));
         Breadcrumbs::addCrumb('Detail',URL::to( strtolower($this->controller_name).'/detail/'.$asset->_id ));
         Breadcrumbs::addCrumb($asset->SKU,URL::to( strtolower($this->controller_name) ));
@@ -631,15 +635,19 @@ class AssetController extends AdminController {
     {
         $name = HTML::link('property/view/'.$data['_id'],$data['address']);
 
+        $pics = Uploaded::where('parent_id',$data['_id'])
+                            ->where('parent_class','asset')
+                            ->get();
         $thumbnail_url = '';
 
-        if(isset($data['files']) && count($data['files'])){
+        if(count($pics->toArray()) > 0){
+
+            $pics = $pics->toArray();
+
             $glinks = '';
 
-            $gdata = $data['files'][$data['defaultpic']];
-
-            $thumbnail_url = $gdata['thumbnail_url'];
-            foreach($data['files'] as $g){
+            $thumbnail_url = $pics[0]['thumbnail_url'];
+            foreach($pics as $g){
                 $g['caption'] = ( isset($g['caption']) && $g['caption'] != '')?$g['caption']:$data['SKU'];
                 $g['full_url'] = isset($g['full_url'])?$g['full_url']:$g['fileurl'];
                 $glinks .= '<input type="hidden" class="g_'.$data['_id'].'" data-caption="'.$g['caption'].'" value="'.$g['full_url'].'" >';
