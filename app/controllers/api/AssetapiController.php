@@ -164,6 +164,8 @@ class AssetapiController extends \BaseController {
 
         $key = \Input::get('key');
 
+        \Dumper::insert($json);
+
         $mappeddata = array();
         foreach($json as $k=>$v){
             if(isset($this->objmap[$k])){
@@ -185,7 +187,6 @@ class AssetapiController extends \BaseController {
 
         \Asset::insert($data);
 
-        \Dumper::insert($json);
 
         //log history
 
