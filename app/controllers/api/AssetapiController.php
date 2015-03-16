@@ -263,10 +263,10 @@ class AssetapiController extends \BaseController {
         if($asset){
 
             //create history - before state
+            $hobj = $asset->toArray();
 
             $apvticket = \Assets::createApprovalRequest('update', $hobj['assetType'],$id, $id );
 
-            $hobj = $asset->toArray();
             $hobj['_id'] = new \MongoId($id);
 
             $hdata['historyTimestamp'] = new MongoDate();
