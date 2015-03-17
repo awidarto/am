@@ -96,6 +96,15 @@ class AssetapiController extends \BaseController {
                 unset($assets[$i]->files);
                 unset($assets[$i]->medium_portrait_url);
 
+                if(!isset( $assets[$i]->rackName )){
+                    $rack = \Rack::find($data['rackId']);
+
+                    if($rack && isset( $rack->SKU ) ){
+                        $assets[$i]->rackName = $rack->SKU;
+                    }
+
+                }
+
                 $pics = \Uploaded::where('parent_id', $assets[$i]->extId)
                                     ->where('parent_class','asset')
                                     ->orderBy('createdDate','desc')
