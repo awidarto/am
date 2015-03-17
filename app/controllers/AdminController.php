@@ -449,6 +449,9 @@ class AdminController extends Controller {
 
 		}
 
+        //$q['deleted'] = array( '$or'=>array('$exists'=>false, 0)  );
+        $q['deleted'] = array( '$ne'=>1 );
+
         if($this->additional_query){
             $q = array_merge( $q, $this->additional_query );
         }
@@ -837,7 +840,12 @@ class AdminController extends Controller {
 
 			$id = new MongoId($id);
 
-			if($model->where('_id',$id)->delete()){
+            $obj = $model->find($id);
+
+			//if($model->where('_id',$id)->delete()){
+            if($obj){
+                $obj->deleted = 1;
+                $obj->save();
 				Event::fire($controller_name.'.delete',array('id'=>$id,'result'=>'OK'));
 				$result = array('status'=>'OK','data'=>'CONTENTDELETED');
 			}else{

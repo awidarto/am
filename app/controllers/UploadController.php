@@ -227,6 +227,7 @@ class UploadController extends Controller {
                     'name'=> $filename,
                     'type'=> $filemime,
                     'size'=> $filesize,
+                    'deleted'=>0,
                     'createdDate'=>new MongoDate(),
                     'lastUpdate'=>new MongoDate()
                 );
@@ -243,7 +244,40 @@ class UploadController extends Controller {
 
         }
 
-        return Response::JSON(array('status'=>'OK','message'=>'' ,'file'=>$fileitems) );
+        $files = Uploaded::where('parent_id',$parent_id )
+                    ->where('parent_class', $parent_class)
+                    ->where('ns',$ns)
+                    ->where('deleted',0)
+                    ->orderBy('createdDate','desc')
+                    ->get();
+
+        $prefix = $parent_class;
+
+        $thumbs = '';
+
+        if( count($files->toArray()) > 0){
+            foreach ($files->toArray() as $fd) {
+                //print_r($fd);
+
+                if($prefix != ''){
+                    $detailview = $prefix.'.wdetail';
+                }else{
+                    $detailview = 'wupload.detail';
+                }
+
+                $thumb = View::make($detailview)
+                                ->with('filedata',$fd)
+                                ->render();
+
+                $thumbs .= $thumb;
+
+            }
+
+        }
+
+        $thumbs = base64_encode($thumbs);
+
+        return Response::JSON(array('status'=>'OK','message'=>'' ,'file'=>$fileitems, 'thumbs'=>$thumbs ) );
     }
 
 

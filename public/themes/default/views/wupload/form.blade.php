@@ -17,6 +17,13 @@
 
 
         <div id="{{ $element_id }}_files" class="files">
+                <?php
+                    $allin = Input::old();
+                    if(isset($allin['parent_id']) && !isset($formdata) ){
+                        $parent_id = $allin['parent_id'];
+                    }
+                ?>
+
             <input type="hidden" name="parent_id" value="{{ $parent_id }}" />
             <input type="hidden" name="{{ $element_id }}_ns" value="{{ $ns }}" />
             <ul style="margin-left:-25px">
@@ -37,6 +44,7 @@
                         //for($t = 0; $t < count($filename);$t++){
 
                         $files = Uploaded::where('parent_id',$formdata['_id'] )
+                                    ->where('deleted',0)
                                     ->orderBy('createdDate','desc')
                                     ->get();
 
@@ -56,9 +64,9 @@
                                                 ->render();
 
 
-                                //if($fd['ns'] == $ns){
+                                if($fd['ns'] == $ns){
                                     print $thumb;
-                                //}
+                                }
 
                             }
 
@@ -73,6 +81,7 @@
                         //print_r($allin);
 
                         $files = Uploaded::where('parent_id',$allin['parent_id'] )
+                                    ->where('deleted',0)
                                     ->orderBy('createdDate','desc')
                                     ->get();
 
@@ -137,19 +146,17 @@ $(document).ready(function(){
             console.log($(e.target).parent());
 
             if (answer == true){
-                $('#par_' + _id).remove();
-                //$(e.target).parent().remove();
-                $('#fdel_'+e.target.id).remove();
-                /*
-                $.post('',{'id':_id}, function(data) {
-                    if(data.status == 'OK'){
 
+                $.post('{{ URL::to('ajax/delfile')}}',
+                    { id: _id },
+                    function(data) {
+                        if(data.status == 'OK'){
+                            $('#par_' + _id).remove();
+                            $('#fdel_'+e.target.id).remove();
+                        }
+                    },
+                    'json');
 
-
-                        alert("Item id : " + _id + " deleted");
-                    }
-                },'json');
-                */
             }else{
                 alert("Deletion cancelled");
             }
@@ -167,6 +174,16 @@ $(document).ready(function(){
 
             if(data.result.status == 'OK'){
 
+                var thumbs = atob(data.result.thumbs);
+
+                console.log(thumbs);
+
+                $('#{{ $element_id }}_files ul').html(thumbs);
+
+                clip = new ZeroClipboard($('.file_copy').each(function(){ }),{
+                    moviePath: '{{ URL::to('js/zeroclipboard')}}/ZeroClipboard.swf'
+                });
+                /*
                 $.each(data.result.files, function (index, file) {
 
                     @if($prefix == '')
@@ -194,6 +211,7 @@ $(document).ready(function(){
                     });
 
                 });
+                */
                 //$('audio').audioPlayer();
                 //videojs(document.getElementsByClassName('video-js')[0], {}, function(){});
             }else{

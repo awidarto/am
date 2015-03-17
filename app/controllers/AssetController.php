@@ -379,6 +379,21 @@ class AssetController extends AdminController {
 
     public function afterSave($data)
     {
+        if(isset( $data['parent_id'] ) ){
+            $files = Uploaded::where('parent_id', $data['parent_id'])->get();
+
+            if( count( $files->toArray()) > 0){
+                foreach($files as $file){
+                    if(is_string($data['_id'])){
+                        $file->parent_id = $data['_id'];
+                    }else{
+                        $file->parent_id = $data['_id']->__toString();
+                    }
+                    $file->save();
+                }
+            }
+        }
+
         $apvticket = Assets::createApprovalRequest('new', $data['assetType'],$data['_id'], $data['_id'], 'user' );
 
         $hdata = array();
@@ -637,6 +652,7 @@ class AssetController extends AdminController {
 
         $pics = Uploaded::where('parent_id',$data['_id'])
                             ->where('parent_class','asset')
+                            ->where('deleted',0)
                             ->orderBy('createdDate','desc')
                             ->get();
         $thumbnail_url = '';
