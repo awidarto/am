@@ -38,7 +38,7 @@ class AssetapiController extends \BaseController {
         'pictureThumbnailUrl'=> 'pictureThumbnailUrl',
         'rackId'=> 'rackId',
         'status'=> 'status',
-        'tags'=> 'tags',
+        'tags'=> 'tags'
 
         //used for internal android app
         /*
@@ -95,8 +95,16 @@ class AssetapiController extends \BaseController {
                 unset($assets[$i]->files);
                 unset($assets[$i]->medium_portrait_url);
 
-                if(isset($assets[$i]->defaultpictures)){
-                    $dp = $assets[$i]->defaultpictures;
+                $pics = \Uploaded::where('parent_id', $assets[$i]->extId)
+                                    ->where('parent_class','asset')
+                                    ->orderBy('createdDate','desc')
+                                    ->get();
+
+                if( count( $pics->toArray() ) > 0 ){
+                    //$dp = $assets[$i]->defaultpictures;
+
+                    $dp = $pics->toArray();
+                    $dp = $dp[0];
 
                     if(isset($dp['delete_type'])){
                         unset($dp['delete_type']);
@@ -108,14 +116,24 @@ class AssetapiController extends \BaseController {
                         unset($dp['temp_dir']);
                     }
 
+                    /*
                     if(is_array($dp)){
                         foreach($dp as $k=>$v){
                             $name = 'picture'.str_replace(' ', '', ucwords( str_replace('_', ' ', $k) ));
                             $assets[$i]->{$name} = $v;
                         }
                     }
+                    */
 
-                    unset($assets[$i]->defaultpictures);
+                    $assets[$i]->pictureThumbnailUrl = $dp['thumbnail_url'];
+                    $assets[$i]->pictureLargeUrl = $dp['large_url'];
+                    $assets[$i]->pictureMediumUrl = $dp['medium_url'];
+                    $assets[$i]->pictureFullUrl = $dp['full_url'];
+                    $assets[$i]->pictureBrchead = $dp['medium_url'];
+                    $assets[$i]->pictureBrc1 = $dp['medium_url'];
+                    $assets[$i]->pictureBrc2 = $dp['medium_url'];
+                    $assets[$i]->pictureBrc3 = $dp['medium_url'];
+
 
                 }else{
                     $assets[$i]->pictureThumbnailUrl = '';
@@ -127,6 +145,9 @@ class AssetapiController extends \BaseController {
                     $assets[$i]->pictureBrc2 = '';
                     $assets[$i]->pictureBrc3 = '';
                 }
+
+                unset($assets[$i]->defaultpictures);
+
                 if( isset($assets[$i]->createdDate) && !is_string($assets[$i]->createdDate) ){
                     $assets[$i]->createdDate = date('Y-m-d H:i:s',$assets[$i]->createdDate->sec);
                 }
