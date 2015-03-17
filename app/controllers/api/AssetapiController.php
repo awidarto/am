@@ -97,7 +97,7 @@ class AssetapiController extends \BaseController {
                 unset($assets[$i]->medium_portrait_url);
 
                 if(!isset( $assets[$i]->rackName )){
-                    $rack = \Rack::find($data['rackId']);
+                    $rack = \Rack::find( $assets[$i]->rackId );
 
                     if($rack && isset( $rack->SKU ) ){
                         $assets[$i]->rackName = $rack->SKU;
