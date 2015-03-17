@@ -21,14 +21,29 @@
 
     <h5>Pictures</h5>
     <?php
-        $fupload = new Fupload();
+        $fupload = new Wupload();
+    ?>
+    {{ $fupload->id('imageupload')
+        ->ns('rackpic')
+        ->parentid($formdata['_id'])
+        ->parentclass('rack')
+        ->title('Select Picture')
+        ->label('Upload Picture')
+        ->url('upload/file')
+        ->singlefile(false)
+        ->prefix('rack')
+        ->multi(true)
+        ->make($formdata) }}
+
+    <?php
+        //$fupload = new Fupload();
     ?>
 
-    {{ $fupload->id('imageupload')->title('Select Picture')->label('Upload Picture')
+    {{-- $fupload->id('imageupload')->title('Select Picture')->label('Upload Picture')
         ->url('upload/asset/rack')
         ->singlefile(false)
         ->prefix('asset')
-        ->multi(true)->make($formdata) }}
+        ->multi(true)->make($formdata) --}}
 
 @stop
 

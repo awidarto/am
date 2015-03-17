@@ -20,13 +20,29 @@
 
     <h5>Pictures</h5>
     <?php
-        $fupload = new Fupload();
+        $fupload = new Wupload();
+        $temp_id = str_random(10);
     ?>
-    {{ $fupload->id('imageupload')->title('Select Picture')->label('Upload Picture')
+    {{ $fupload->id('imageupload')
+        ->ns('rackpic')
+        ->parentid($temp_id)
+        ->parentclass('rack')
+        ->title('Select Picture')
+        ->label('Upload Picture')
+        ->url('upload/file')
+        ->singlefile(false)
+        ->prefix('asset')
+        ->multi(true)
+        ->make() }}
+
+    <?php
+        //$fupload = new Fupload();
+    ?>
+    {{-- $fupload->id('imageupload')->title('Select Picture')->label('Upload Picture')
         ->url('upload/asset/rack')
         ->singlefile(false)
         ->prefix('asset')
-        ->multi(true)->make() }}
+        ->multi(true)->make() --}}
 
 @stop
 

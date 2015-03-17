@@ -28,6 +28,22 @@
     {{ Former::textarea('description','Description')->class('editor form-control') }}
     {{ Former::text('tags','Tags')->class('tag_keyword') }}
 
+    <h5>Pictures</h5>
+    <?php
+        $fupload = new Wupload();
+    ?>
+    {{ $fupload->id('imageupload')
+        ->ns('locationpic')
+        ->parentid($formdata['_id'])
+        ->parentclass('assetlocation')
+        ->title('Select Picture')
+        ->label('Upload Picture')
+        ->url('upload/file')
+        ->singlefile(false)
+        ->prefix('assetlocation')
+        ->multi(true)
+        ->make($formdata) }}
+
 @stop
 
 @section('aux')

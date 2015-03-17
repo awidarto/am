@@ -32,6 +32,7 @@ class AssetlocationController extends AdminController {
         $this->heads = array(
             array('Name',array('search'=>false,'sort'=>false)),
             array('Code',array('search'=>false,'sort'=>false)),
+            array('Pictures',array('search'=>false,'sort'=>false)),
             array('Venue',array('search'=>true,'sort'=>true)),
             array('Address',array('search'=>true,'sort'=>true)),
             array('Category',array('search'=>true,'sort'=>true,'select'=>Config::get('asset.location_category') )),
@@ -57,6 +58,7 @@ class AssetlocationController extends AdminController {
         $this->fields = array(
             array('name',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
             array('_id',array('kind'=>'text','query'=>'like','pos'=>'both','callback'=>'dispBar','attr'=>array('class'=>'expander'),'show'=>true)),
+            array('name',array('kind'=>'text', 'callback'=>'namePic', 'query'=>'like','pos'=>'both','show'=>true)),
             array('venue',array('kind'=>'text','query'=>'like','pos'=>'both','attr'=>array('class'=>'expander'),'show'=>true)),
             array('address',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
             array('category',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
@@ -148,8 +150,39 @@ class AssetlocationController extends AdminController {
         return $display.'<br />'.$data['SKU'];
     }
 
-
     public function namePic($data)
+    {
+        $name = HTML::link('property/view/'.$data['_id'],$data['address']);
+
+        $pics = Uploaded::where('parent_id',$data['_id'])
+                            ->where('parent_class','assetlocation')
+                            ->where('deleted',0)
+                            ->orderBy('createdDate','desc')
+                            ->get();
+        $thumbnail_url = '';
+
+        if(count($pics->toArray()) > 0){
+
+            $pics = $pics->toArray();
+
+            $glinks = '';
+
+            $thumbnail_url = $pics[0]['thumbnail_url'];
+            foreach($pics as $g){
+                $g['caption'] = ( isset($g['caption']) && $g['caption'] != '')?$g['caption']:$data['SKU'];
+                $g['full_url'] = isset($g['full_url'])?$g['full_url']:$g['fileurl'];
+                $glinks .= '<input type="hidden" class="g_'.$data['_id'].'" data-caption="'.$g['caption'].'" value="'.$g['full_url'].'" >';
+            }
+
+            $display = HTML::image($thumbnail_url.'?'.time(), $thumbnail_url, array('class'=>'thumbnail img-polaroid','style'=>'cursor:pointer;','id' => $data['_id'])).$glinks;
+            return $display;
+        }else{
+            return $data['name'];
+        }
+    }
+
+
+    public function __namePic($data)
     {
         $name = HTML::link('property/view/'.$data['_id'],$data['address']);
 
