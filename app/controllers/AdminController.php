@@ -846,6 +846,19 @@ class AdminController extends Controller {
             if($obj){
                 $obj->deleted = 1;
                 $obj->save();
+
+                //$apvticket = Assets::createApprovalRequest('delete', $obj->assetType, $id, $id, 'user' );
+                /*
+                $hdata = array();
+                $hdata['historyTimestamp'] = new MongoDate();
+                $hdata['historyAction'] = 'delete';
+                $hdata['historySequence'] = 0;
+                $hdata['historyObjectType'] = $controller_name;
+                $hdata['historyObject'] = $obj;
+                $hdata['approvalTicket'] = false;
+                History::insert($hdata);
+                */
+
 				Event::fire($controller_name.'.delete',array('id'=>$id,'result'=>'OK'));
 				$result = array('status'=>'OK','data'=>'CONTENTDELETED');
 			}else{
