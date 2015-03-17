@@ -37,6 +37,7 @@ class AssetapiController extends \BaseController {
         'pictureMediumUrl'=> 'pictureMediumUrl',
         'pictureThumbnailUrl'=> 'pictureThumbnailUrl',
         'rackId'=> 'rackId',
+        'rackName'=> 'rackName',
         'status'=> 'status',
         'tags'=> 'tags'
 
@@ -211,6 +212,12 @@ class AssetapiController extends \BaseController {
             $data['lastUpdate'] = new \MongoDate( strtotime($data['lastUpdate']) );
         }
 
+        $rack = \Rack::find($data['rackId']);
+
+        if($rack && isset( $rack->SKU ) ){
+            $data['rackName'] = $rack->SKU;
+        }
+
         \Asset::insert($data);
 
 
@@ -352,6 +359,12 @@ class AssetapiController extends \BaseController {
 
             if( isset($data['lastUpdate']) && is_string($data['lastUpdate'])){
                 $data['lastUpdate'] = new \MongoDate( strtotime($data['lastUpdate']) );
+            }
+
+            $rack = \Rack::find($data['rackId']);
+
+            if($rack && isset( $rack->SKU ) ){
+                $data['rackName'] = $rack->SKU;
             }
 
             \Asset::insert($data);
