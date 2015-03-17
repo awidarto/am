@@ -637,6 +637,7 @@ class AssetController extends AdminController {
 
         $pics = Uploaded::where('parent_id',$data['_id'])
                             ->where('parent_class','asset')
+                            ->orderBy('createdDate','desc')
                             ->get();
         $thumbnail_url = '';
 

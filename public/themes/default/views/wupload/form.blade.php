@@ -36,7 +36,9 @@
                                                 // display previously saved data
                         //for($t = 0; $t < count($filename);$t++){
 
-                        $files = Uploaded::where('parent_id',$formdata['_id'] )->get();
+                        $files = Uploaded::where('parent_id',$formdata['_id'] )
+                                    ->orderBy('createdDate','desc')
+                                    ->get();
 
 
                         if( count($files->toArray()) > 0){
@@ -70,7 +72,9 @@
 
                         //print_r($allin);
 
-                        $files = Uploaded::where('parent_id',$allin['parent_id'] )->get();
+                        $files = Uploaded::where('parent_id',$allin['parent_id'] )
+                                    ->orderBy('createdDate','desc')
+                                    ->get();
 
                         $ns = (isset($allin[$element_id.'_ns']))?$allin[$element_id.'_ns']:'';
 
