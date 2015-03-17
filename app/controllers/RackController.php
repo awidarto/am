@@ -234,6 +234,38 @@ class RackController extends AdminController {
         return parent::postEdit($id,$data);
     }
 
+    public function afterSave($data)
+    {
+        if(isset( $data['parent_id'] ) ){
+            $files = Uploaded::where('parent_id', $data['parent_id'])->get();
+
+            if( count( $files->toArray()) > 0){
+                foreach($files as $file){
+                    if(is_string($data['_id'])){
+                        $file->parent_id = $data['_id'];
+                    }else{
+                        $file->parent_id = $data['_id']->__toString();
+                    }
+                    $file->save();
+                }
+            }
+        }
+        /*
+        $apvticket = Assets::createApprovalRequest('new', $data['assetType'],$data['_id'], $data['_id'], 'user' );
+
+        $hdata = array();
+        $hdata['historyTimestamp'] = new MongoDate();
+        $hdata['historyAction'] = 'new';
+        $hdata['historySequence'] = 0;
+        $hdata['historyObjectType'] = 'asset';
+        $hdata['historyObject'] = $data;
+        $hdata['approvalTicket'] = $apvticket;
+        History::insert($hdata);
+        */
+        return $data;
+    }
+
+
     public function postDlxl()
     {
 
