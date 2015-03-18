@@ -5,8 +5,17 @@
 
         <h5>Device Info</h5>
 
+        <div class="row">
+            <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                {{ Former::text('SKU','Asset Code')->class('idgen form-control') }}
+            </div>
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                <br />
+                <span class="btn btn-primary gen" style="margin-top:9px;" >Generate</span>
+            </div>
+        </div>
 
-        {{ Former::text('SKU','Asset Code') }}
+
         {{ Former::select('status')->options(array('inactive'=>'Inactive','active'=>'Active'))->label('Status') }}
 
         {{ Former::select('assetType','Device Type')->options( Assets::getType()->TypeToSelection('type','type',true) ) }}
@@ -93,6 +102,12 @@ $(document).ready(function() {
 
     $('.pick-a-color').pickAColor();
 
+    $('.gen').on('click',function(){
+        var id = makeid(8);
+        $('.idgen').val(id);
+        return false;
+    })
+
     $('#name').keyup(function(){
         var title = $('#name').val();
         var slug = string_to_slug(title);
@@ -121,6 +136,18 @@ $(document).ready(function() {
             opt += '<option value="' + k + '">' + data[k] +'</option>';
         }
         return opt;
+    }
+
+    function makeid( len )
+    {
+        var text = "";
+        //var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+        for( var i=0; i < len; i++ )
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+        return text;
     }
 
 

@@ -91,6 +91,8 @@ class ImporterController extends AdminController {
                 $rackName = trim($sheet->getTitle());
                 $rackId = $this->rackId($rackName, $locationId, $locationName);
 
+
+
                 print $rackId.' - '.$rackName.' - '.$locationId.' - '.$locationName."\r\n";
 
                 $i = 0;
@@ -117,6 +119,10 @@ class ImporterController extends AdminController {
                         $add['locationName'] = $locationName;
                         $add['locationId'] = $locationId;
                         $add['rackId'] = $rackId;
+
+                        if(isset($row['SKU']) && $row['SKU'] == ''){
+                            $row['SKU'] = strtoupper(str_random(8)) ;
+                        }
 
                         $row = array_merge($add,$row);
 
@@ -281,7 +287,7 @@ class ImporterController extends AdminController {
     {
         $assetnames = array();
         foreach($items as $item){
-            $assetnames[] = $item['SKU'];
+            $assetnames[] = strval($item['SKU']);
         }
 
         $namecount = array_count_values($assetnames);
