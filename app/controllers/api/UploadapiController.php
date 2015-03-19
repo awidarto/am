@@ -26,6 +26,7 @@ class UploadapiController extends \Controller {
 
         print_r(Input::all());
 
+
         if(Input::hasFile('file')){
             $files = Input::file('file');
         }else{
