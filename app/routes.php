@@ -109,6 +109,7 @@ Route::get('fillrack',function(){
 
         if($rack){
             $r = $rack->toArray();
+            print $r['_id'];
             $as->rackId = $r['_id'];
             $as->save();
         }
