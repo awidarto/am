@@ -24,10 +24,6 @@ class UploadapiController extends \Controller {
     public function postFile()
     {
 
-        print_r($_FILES);
-
-        die();
-
         $parent_id = Input::get('parid');
 
         $parent_class = Input::get('parclass');
@@ -36,16 +32,30 @@ class UploadapiController extends \Controller {
 
         $ns = Input::get('ns');
 
-        $file = $files[0];
+        $result = '';
+
+        $file = '';
+        if(isset($_FILES) && is_array($_FILES)){
+            foreach ($_FILES as $key => $value) {
+                $file = $key;
+            }
+            $result = $file.' '.$parent_id.' '.$parent_class.' '.$ns.' '.$image_id;
+
+        }
+
+
+        return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>$result ));
 
         $rstring = str_random(15);
 
         $destinationPath = realpath('storage/media').'/'.$rstring;
 
-        //$filename = $file->getClientOriginalName();
-        //$filemime = $file->getMimeType();
-        //$filesize = $file->getSize();
-        //$extension =$file->getClientOriginalExtension(); //if you need extension of the file
+        if (isset($_FILES['image']['name'])){
+            $filename = $file->getClientOriginalName();
+            $filemime = $file->getMimeType();
+            $filesize = $file->getSize();
+            $extension =$file->getClientOriginalExtension(); //if you need extension of the file
+        }
 
         $filename = 'file_name'.time();
         $filemime = 'image/jpg';
