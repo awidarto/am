@@ -101,6 +101,21 @@ Route::get('tonumber',function(){
 
 });
 
+Route::get('fillrack',function(){
+    $assets = Asset::get();
+
+    foreach ($assets as $as ){
+        $rack = Rack::where('rackName', $as->rackName )->first();
+
+        if($rack){
+            $r = $rack->toArray();
+            $as->rackId = $r['_id'];
+            $as->save();
+        }
+    }
+
+});
+
 Route::get('regeneratepic/{obj?}',function($obj = null){
 
     set_time_limit(0);
