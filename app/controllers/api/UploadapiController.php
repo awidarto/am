@@ -24,7 +24,7 @@ class UploadapiController extends \Controller {
     public function postFile()
     {
 
-        print_r(Input::file());
+        print_r($_FILES);
 
         die();
 
