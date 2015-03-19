@@ -325,7 +325,7 @@ class ImporterController extends AdminController {
 
     private function rackId($rackName, $locationId, $locationName){
         $rack = Rack::where('SKU',$rackName)
-            ->where('locationId',$locationId)
+            //->where('locationId',$locationId)
             ->first();
 
         if($rack){
