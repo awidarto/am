@@ -39,20 +39,30 @@ class UploadapiController extends \Controller {
 
         $destinationPath = realpath('storage/media').'/'.$rstring;
 
-        $filename = $file->getClientOriginalName();
-        $filemime = $file->getMimeType();
-        $filesize = $file->getSize();
-        $extension =$file->getClientOriginalExtension(); //if you need extension of the file
+        //$filename = $file->getClientOriginalName();
+        //$filemime = $file->getMimeType();
+        //$filesize = $file->getSize();
+        //$extension =$file->getClientOriginalExtension(); //if you need extension of the file
+
+        $filename = 'file_name'.time();
+        $filemime = 'image/jpg';
+        $filesize = '100000';
+        $extension = '.jpg'; //if you need extension of the file
 
         $filename = str_replace(\Config::get('kickstart.invalidchars'), '-', $filename);
 
         $uploadSuccess = $file->move($destinationPath, $filename);
 
 
-        $is_image = $this->isImage($filemime);
-        $is_audio = $this->isAudio($filemime);
-        $is_video = $this->isVideo($filemime);
-        $is_pdf = $this->isPdf($filemime);
+        //$is_image = $this->isImage($filemime);
+        //$is_audio = $this->isAudio($filemime);
+        //$is_video = $this->isVideo($filemime);
+        //$is_pdf = $this->isPdf($filemime);
+
+        $is_image = true;
+        $is_audio = false;
+        $is_video = false;
+        $is_pdf = false;
 
         if(!($is_image || $is_audio || $is_video || $is_pdf)){
             $is_doc = true;
