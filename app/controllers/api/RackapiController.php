@@ -53,8 +53,16 @@ class RackapiController extends \BaseController {
                 unset($locations[$i]->files);
                 unset($locations[$i]->medium_portrait_url);
 
-                if(isset($locations[$i]->defaultpictures)){
-                    $dp = $locations[$i]->defaultpictures;
+               $pics = \Uploaded::where('parent_id', $locations[$i]->extId)
+                                    ->where('parent_class','rack')
+                                    ->orderBy('createdDate','desc')
+                                    ->get();
+
+                if( count( $pics->toArray() ) > 0 ){
+                    //$dp = $assets[$i]->defaultpictures;
+
+                    $dp = $pics->toArray();
+                    $dp = $dp[0];
 
                     if(isset($dp['delete_type'])){
                         unset($dp['delete_type']);
@@ -65,10 +73,13 @@ class RackapiController extends \BaseController {
                     if(isset($dp['temp_dir'])){
                         unset($dp['temp_dir']);
                     }
+
                     /*
-                    foreach($dp as $k=>$v){
-                        $name = 'picture'.str_replace(' ', '', ucwords( str_replace('_', ' ', $k) ));
-                        $locations[$i]->{$name} = $v;
+                    if(is_array($dp)){
+                        foreach($dp as $k=>$v){
+                            $name = 'picture'.str_replace(' ', '', ucwords( str_replace('_', ' ', $k) ));
+                            $assets[$i]->{$name} = $v;
+                        }
                     }
                     */
 
@@ -80,8 +91,6 @@ class RackapiController extends \BaseController {
                     $locations[$i]->pictureBrc1 = $dp['medium_url'];
                     $locations[$i]->pictureBrc2 = $dp['medium_url'];
                     $locations[$i]->pictureBrc3 = $dp['medium_url'];
-
-                    unset($locations[$i]->defaultpictures);
 
                 }else{
                     $locations[$i]->pictureThumbnailUrl = '';
