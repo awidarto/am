@@ -23,7 +23,13 @@ class UploadapiController extends \Controller {
      */
     public function postFile()
     {
-        $files = Input::file('filecontent');
+
+        if(Input::hasFile('file')){
+            $files = Input::file('file');
+        }else{
+            return \Response::json(array('status'=>'NOK', 'timestamp'=>time(), 'message'=>'No Image' ));
+        }
+
 
         $parent_id = Input::get('parid');
 
