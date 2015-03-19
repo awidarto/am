@@ -44,7 +44,7 @@ class UploadapiController extends \Controller {
         $filesize = $file->getSize();
         $extension =$file->getClientOriginalExtension(); //if you need extension of the file
 
-        $filename = str_replace(Config::get('kickstart.invalidchars'), '-', $filename);
+        $filename = str_replace(\Config::get('kickstart.invalidchars'), '-', $filename);
 
         $uploadSuccess = $file->move($destinationPath, $filename);
 
@@ -62,38 +62,38 @@ class UploadapiController extends \Controller {
 
         if($is_image){
 
-            $ps = Config::get('picture.sizes');
+            $ps = \Config::get('picture.sizes');
 
-            $thumbnail = Image::make($destinationPath.'/'.$filename)
+            $thumbnail = \Image::make($destinationPath.'/'.$filename)
                 ->fit($ps['thumbnail']['width'],$ps['thumbnail']['height'])
                 ->save($destinationPath.'/th_'.$filename);
 
-            $medium = Image::make($destinationPath.'/'.$filename)
+            $medium = \Image::make($destinationPath.'/'.$filename)
                 ->fit($ps['medium']['width'],$ps['medium']['height'])
                 ->save($destinationPath.'/med_'.$filename);
 
-            $large = Image::make($destinationPath.'/'.$filename)
+            $large = \Image::make($destinationPath.'/'.$filename)
                 ->fit($ps['large']['width'],$ps['large']['height'])
                 ->save($destinationPath.'/lrg_'.$filename);
 
-            $full = Image::make($destinationPath.'/'.$filename)
+            $full = \Image::make($destinationPath.'/'.$filename)
                 ->save($destinationPath.'/full_'.$filename);
 
             $image_size_array = array(
-                'thumbnail_url'=> URL::to('storage/media/'.$rstring.'/'.$ps['thumbnail']['prefix'].$filename),
-                'large_url'=> URL::to('storage/media/'.$rstring.'/'.$ps['large']['prefix'].$filename),
-                'medium_url'=> URL::to('storage/media/'.$rstring.'/'.$ps['medium']['prefix'].$filename),
-                'full_url'=> URL::to('storage/media/'.$rstring.'/'.$ps['full']['prefix'].$filename),
+                'thumbnail_url'=> \URL::to('storage/media/'.$rstring.'/'.$ps['thumbnail']['prefix'].$filename),
+                'large_url'=> \URL::to('storage/media/'.$rstring.'/'.$ps['large']['prefix'].$filename),
+                'medium_url'=> \URL::to('storage/media/'.$rstring.'/'.$ps['medium']['prefix'].$filename),
+                'full_url'=> \URL::to('storage/media/'.$rstring.'/'.$ps['full']['prefix'].$filename),
             );
 
         }else{
 
             if($is_audio){
-                $thumbnail_url = URL::to('images/audio.png');
+                $thumbnail_url = \URL::to('images/audio.png');
             }elseif($is_video){
-                $thumbnail_url = URL::to('images/video.png');
+                $thumbnail_url = \URL::to('images/video.png');
             }else{
-                $thumbnail_url = URL::to('images/media.png');
+                $thumbnail_url = \URL::to('images/media.png');
             }
 
             $image_size_array = array(
@@ -124,15 +124,15 @@ class UploadapiController extends \Controller {
                     'type'=> $filemime,
                     'size'=> $filesize,
                     'deleted'=>0,
-                    'createdDate'=>new MongoDate(),
-                    'lastUpdate'=>new MongoDate()
+                    'createdDate'=>new \MongoDate(),
+                    'lastUpdate'=>new \MongoDate()
                 );
 
             foreach($image_size_array as $k=>$v){
                 $item[$k] = $v;
             }
 
-            $item['_id'] = new MongoId($image_id);
+            $item['_id'] = new \MongoId($image_id);
 
             \Uploaded::insertGetId($item);
 
