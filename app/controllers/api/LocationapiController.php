@@ -57,9 +57,15 @@ class LocationapiController extends \BaseController {
                 if(isset($locations[$i]->defaultpictures)){
                     $dp = $locations[$i]->defaultpictures;
 
-                    unset($dp['delete_type']);
-                    unset($dp['delete_url']);
-                    unset($dp['temp_dir']);
+                    if(isset($dp['delete_type'])){
+                        unset($dp['delete_type']);
+                    }
+                    if(isset($dp['delete_url'])){
+                        unset($dp['delete_url']);
+                    }
+                    if(isset($dp['temp_dir'])){
+                        unset($dp['temp_dir']);
+                    }
 
                     foreach($dp as $k=>$v){
                         $name = 'picture'.str_replace(' ', '', ucwords( str_replace('_', ' ', $k) ));
