@@ -116,8 +116,6 @@ class AssetapiController extends \BaseController {
                     $dp = $pics->toArray();
                     $dp = $dp[0];
 
-                    /*
-
                     if(isset($dp['delete_type'])){
                         unset($dp['delete_type']);
                     }
@@ -128,6 +126,7 @@ class AssetapiController extends \BaseController {
                         unset($dp['temp_dir']);
                     }
 
+                    /*
                     if(is_array($dp)){
                         foreach($dp as $k=>$v){
                             $name = 'picture'.str_replace(' ', '', ucwords( str_replace('_', ' ', $k) ));

@@ -65,11 +65,22 @@ class RackapiController extends \BaseController {
                     if(isset($dp['temp_dir'])){
                         unset($dp['temp_dir']);
                     }
-
+                    /*
                     foreach($dp as $k=>$v){
                         $name = 'picture'.str_replace(' ', '', ucwords( str_replace('_', ' ', $k) ));
                         $locations[$i]->{$name} = $v;
                     }
+                    */
+
+                    $locations[$i]->pictureThumbnailUrl = $dp['thumbnail_url'];
+                    $locations[$i]->pictureLargeUrl = $dp['large_url'];
+                    $locations[$i]->pictureMediumUrl = $dp['medium_url'];
+                    $locations[$i]->pictureFullUrl = $dp['full_url'];
+                    $locations[$i]->pictureBrchead = $dp['medium_url'];
+                    $locations[$i]->pictureBrc1 = $dp['medium_url'];
+                    $locations[$i]->pictureBrc2 = $dp['medium_url'];
+                    $locations[$i]->pictureBrc3 = $dp['medium_url'];
+
                     unset($locations[$i]->defaultpictures);
 
                 }else{
