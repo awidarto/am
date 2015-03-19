@@ -24,10 +24,12 @@ class UploadapiController extends \Controller {
     public function postFile()
     {
 
+
+
         if(Input::hasFile('file')){
             $files = Input::file('file');
         }else{
-            return \Response::json(array('status'=>'NOK', 'timestamp'=>time(), 'message'=>'No Image' ));
+            return \Response::json(array('status'=>'NOK', 'timestamp'=>time(), 'message'=>'No Image : '.\Request::url() ));
         }
 
 
