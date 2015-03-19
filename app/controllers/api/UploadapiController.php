@@ -26,13 +26,7 @@ class UploadapiController extends \Controller {
 
         print_r(Input::all());
 
-
-        if(Input::hasFile('file')){
-            $files = Input::file('file');
-        }else{
-            return \Response::json(array('status'=>'NOK', 'timestamp'=>time(), 'message'=>'No Image : '.\Request::url() ));
-        }
-
+        die();
 
         $parent_id = Input::get('parid');
 
