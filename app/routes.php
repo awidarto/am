@@ -105,7 +105,7 @@ Route::get('fillrack',function(){
     $assets = Asset::get();
 
     foreach ($assets as $as ){
-        $rack = Rack::where('rackName', $as->rackName )->first();
+        $rack = Rack::where('SKU', $as->rackName )->first();
 
         if($rack){
             $r = $rack->toArray();
