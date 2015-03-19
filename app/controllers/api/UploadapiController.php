@@ -112,7 +112,7 @@ class UploadapiController extends \Controller {
                     'ns'=>$ns,
                     'parent_id'=> $parent_id,
                     'parent_class'=> $parent_class,
-                    'url'=> URL::to('storage/media/'.$rstring.'/'.$filename),
+                    'url'=> \URL::to('storage/media/'.$rstring.'/'.$filename),
                     'temp_dir'=> $destinationPath,
                     'file_id'=> $rstring,
                     'is_image'=>$is_image,
