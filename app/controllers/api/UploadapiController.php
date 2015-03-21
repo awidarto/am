@@ -62,6 +62,11 @@ class UploadapiController extends \Controller {
             $is_video = false;
             $is_pdf = false;
 
+            $is_image = $this->isImage($filemime);
+            $is_audio = $this->isAudio($filemime);
+            $is_video = $this->isVideo($filemime);
+            $is_pdf = $this->isPdf($filemime);
+
             if(!($is_image || $is_audio || $is_video || $is_pdf)){
                 $is_doc = true;
             }else{
@@ -153,6 +158,22 @@ class UploadapiController extends \Controller {
 
         return \Response::json(array('status'=>'ERR:NOFILE', 'timestamp'=>time(), 'message'=>$image_id ));
 
+    }
+
+    private function isAudio($mime){
+        return preg_match('/^audio/',$mime);
+    }
+
+    private function isVideo($mime){
+        return preg_match('/^video/',$mime);
+    }
+
+    private function isImage($mime){
+        return preg_match('/^image/',$mime);
+    }
+
+    private function isPdf($mime){
+        return preg_match('/pdf/',$mime);
     }
 
 
