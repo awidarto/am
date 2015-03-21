@@ -148,7 +148,12 @@ class UploadapiController extends \Controller {
 
             $item['_id'] = new \MongoId($image_id);
 
-            \Uploaded::insertGetId($item);
+            $im = \Uploaded::find($image_id);
+            if($im){
+
+            }else{
+                \Uploaded::insertGetId($item);
+            }
 
             $actor = $key;
             \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'upload image'));
