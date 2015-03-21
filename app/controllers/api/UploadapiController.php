@@ -24,6 +24,8 @@ class UploadapiController extends \Controller {
     public function postFile()
     {
 
+        $file = Input::file('file');
+
         $parent_id = Input::get('parid');
 
         $parent_class = Input::get('parclass');
@@ -34,33 +36,28 @@ class UploadapiController extends \Controller {
 
         $result = '';
 
-        $file = '';
-        if(isset($_FILES) && is_array($_FILES)){
-            foreach ($_FILES as $key => $value) {
-                $file = $key;
-            }
-            $result = $file.' '.$parent_id.' '.$parent_class.' '.$ns.' '.$image_id;
-
-        }
-
-
-        return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>$result ));
-
-        $rstring = str_random(15);
-
         $destinationPath = realpath('storage/media').'/'.$rstring;
 
-        if (isset($_FILES['image']['name'])){
-            $filename = $file->getClientOriginalName();
-            $filemime = $file->getMimeType();
-            $filesize = $file->getSize();
-            $extension =$file->getClientOriginalExtension(); //if you need extension of the file
-        }
+        $filename = $file->getClientOriginalName();
+        $filemime = $file->getMimeType();
+        $filesize = $file->getSize();
+        $extension =$file->getClientOriginalExtension(); //if you need extension of the file
 
-        $filename = 'file_name'.time();
-        $filemime = 'image/jpg';
-        $filesize = '100000';
-        $extension = '.jpg'; //if you need extension of the file
+        $filename = str_replace(Config::get('kickstart.invalidchars'), '-', $filename);
+
+        $uploadSuccess = $file->move($destinationPath, $filename);
+
+
+        $is_image = $this->isImage($filemime);
+        $is_audio = $this->isAudio($filemime);
+        $is_video = $this->isVideo($filemime);
+        $is_pdf = $this->isPdf($filemime);
+
+        if(!($is_image || $is_audio || $is_video || $is_pdf)){
+            $is_doc = true;
+        }else{
+            $is_doc = false;
+        }
 
         $filename = str_replace(\Config::get('kickstart.invalidchars'), '-', $filename);
 
