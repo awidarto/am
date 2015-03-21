@@ -24,7 +24,7 @@ class UploadapiController extends \Controller {
     public function postFile()
     {
 
-        $file = Input::file('file');
+        $file = Input::file();
 
         $parent_id = Input::get('parid');
 
