@@ -38,6 +38,10 @@ class UploadapiController extends \Controller {
 
         $result = '';
 
+        print_r($file);
+
+        die();
+
         $destinationPath = realpath('storage/media').'/'.$rstring;
 
         $filename = $file->getClientOriginalName();
