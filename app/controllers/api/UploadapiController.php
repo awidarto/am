@@ -51,7 +51,7 @@ class UploadapiController extends \Controller {
 
             $tmp_name = $file['tmp_name'];
 
-            $filename = str_replace(Config::get('kickstart.invalidchars'), '-', $filename);
+            $filename = str_replace(\Config::get('kickstart.invalidchars'), '-', $filename);
 
             //$uploadSuccess = $file->move($destinationPath, $filename);
 
