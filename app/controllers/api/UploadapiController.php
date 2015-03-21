@@ -30,6 +30,165 @@ class UploadapiController extends \Controller {
 
         $parent_class = Input::get('parclass');
 
+        $file_id = Input::get('fid');
+
+        $image_id = Input::get('img');
+
+        $ns = Input::get('ns');
+
+        if( isset($file_id) && $file_id != '' ){
+            $rstring = $file_id;
+        }else{
+            $rstring = str_random(15);
+        }
+
+        $result = '';
+
+        $destinationPath = realpath('storage/media').'/'.$rstring;
+
+        if(Input::hasFile('imagefile')){
+
+            $file = Input::file('imagefile');
+
+            $rstring = str_random(15);
+
+            $destinationPath = realpath('storage/media').'/'.$rstring;
+
+            $filename = $file->getClientOriginalName();
+            $filemime = $file->getMimeType();
+            $filesize = $file->getSize();
+            $extension = $file->getClientOriginalExtension(); //if you need extension of the file
+
+            $filename = str_replace(\Config::get('kickstart.invalidchars'), '-', $filename);
+
+            $uploadSuccess = $file->move($destinationPath, $filename);
+
+            $is_image = true;
+            $is_audio = false;
+            $is_video = false;
+            $is_pdf = false;
+            $is_doc = false;
+
+            $is_image = $this->isImage($filemime);
+            $is_audio = $this->isAudio($filemime);
+            $is_video = $this->isVideo($filemime);
+            $is_pdf = $this->isPdf($filemime);
+
+            if(!($is_image || $is_audio || $is_video || $is_pdf)){
+                $is_doc = true;
+            }else{
+                $is_doc = false;
+            }
+
+            if($is_image){
+
+                $ps = \Config::get('picture.sizes');
+
+                $thumbnail = \Image::make($destinationPath.'/'.$filename)
+                    ->fit($ps['thumbnail']['width'],$ps['thumbnail']['height'])
+                    ->save($destinationPath.'/th_'.$filename);
+
+                $medium = \Image::make($destinationPath.'/'.$filename)
+                    ->fit($ps['medium']['width'],$ps['medium']['height'])
+                    ->save($destinationPath.'/med_'.$filename);
+
+                $large = \Image::make($destinationPath.'/'.$filename)
+                    ->fit($ps['large']['width'],$ps['large']['height'])
+                    ->save($destinationPath.'/lrg_'.$filename);
+
+                $full = \Image::make($destinationPath.'/'.$filename)
+                    ->save($destinationPath.'/full_'.$filename);
+
+                $image_size_array = array(
+                    'thumbnail_url'=> \URL::to('storage/media/'.$rstring.'/'.$ps['thumbnail']['prefix'].$filename),
+                    'large_url'=> \URL::to('storage/media/'.$rstring.'/'.$ps['large']['prefix'].$filename),
+                    'medium_url'=> \URL::to('storage/media/'.$rstring.'/'.$ps['medium']['prefix'].$filename),
+                    'full_url'=> \URL::to('storage/media/'.$rstring.'/'.$ps['full']['prefix'].$filename),
+                );
+
+            }else{
+
+                if($is_audio){
+                    $thumbnail_url = \URL::to('images/audio.png');
+                }elseif($is_video){
+                    $thumbnail_url = \URL::to('images/video.png');
+                }else{
+                    $thumbnail_url = \URL::to('images/media.png');
+                }
+
+                $image_size_array = array(
+                    'thumbnail_url'=> $thumbnail_url,
+                    'large_url'=> '',
+                    'medium_url'=> '',
+                    'full_url'=> ''
+                );
+            }
+
+
+            $item = array(
+                    'ns'=>$ns,
+                    'parent_id'=> $parent_id,
+                    'parent_class'=> $parent_class,
+                    'url'=> \URL::to('storage/media/'.$rstring.'/'.$filename),
+                    'temp_dir'=> $destinationPath,
+                    'file_id'=> $rstring,
+                    'is_image'=>$is_image,
+                    'is_audio'=>$is_audio,
+                    'is_video'=>$is_video,
+                    'is_pdf'=>$is_pdf,
+                    'is_doc'=>$is_doc,
+                    'name'=> $filename,
+                    'type'=> $filemime,
+                    'size'=> $filesize,
+                    'deleted'=>0,
+                    'createdDate'=>new \MongoDate(),
+                    'lastUpdate'=>new \MongoDate()
+                );
+
+            foreach($image_size_array as $k=>$v){
+                $item[$k] = $v;
+            }
+
+
+            $item['_id'] = new \MongoId($image_id);
+
+            $im = \Uploaded::find($image_id);
+            if($im){
+
+            }else{
+                \Uploaded::insertGetId($item);
+            }
+
+            $actor = $key;
+            \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'upload image'));
+
+            return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>$image_id ));
+
+
+        }
+
+        $actor = $key;
+        \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'upload image failed'));
+
+        return \Response::json(array('status'=>'ERR:NOFILE', 'timestamp'=>time(), 'message'=>$image_id ));
+
+    }
+
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @return Response
+     */
+    public function postFiles()
+    {
+
+        $key = Input::get('key');
+
+        $parent_id = Input::get('parid');
+
+        $parent_class = Input::get('parclass');
+
         $image_id = Input::get('img');
 
         $ns = Input::get('ns');
