@@ -155,6 +155,12 @@ class UploadapiController extends \Controller {
             $im = \Uploaded::find($image_id);
             if($im){
 
+                foreach($item as $k=>$v){
+                    $im->{$k} = $v;
+                }
+
+                $im->save();
+
             }else{
                 \Uploaded::insertGetId($item);
             }
