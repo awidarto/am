@@ -63,7 +63,7 @@ class UploadapiController extends \Controller {
             $is_pdf = false;
             $is_doc = false;
 
-            /*
+
 
             $is_image = $this->isImage($filemime);
             $is_audio = $this->isAudio($filemime);
@@ -119,7 +119,7 @@ class UploadapiController extends \Controller {
                     'full_url'=> ''
                 );
             }
-            */
+
 
             $item = array(
                     'ns'=>$ns,
@@ -140,11 +140,11 @@ class UploadapiController extends \Controller {
                     'createdDate'=>new \MongoDate(),
                     'lastUpdate'=>new \MongoDate()
                 );
-            /*
+
             foreach($image_size_array as $k=>$v){
                 $item[$k] = $v;
             }
-            */
+
 
             $item['_id'] = new \MongoId($image_id);
 
