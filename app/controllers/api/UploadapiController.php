@@ -156,7 +156,9 @@ class UploadapiController extends \Controller {
             if($im){
 
                 foreach($item as $k=>$v){
-                    $im->{$k} = $v;
+                    if($k != '_id'){
+                        $im->{$k} = $v;
+                    }
                 }
 
                 $im->save();
