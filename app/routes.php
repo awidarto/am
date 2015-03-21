@@ -51,11 +51,6 @@ Route::controller('profile', 'ProfileController');
 
 Route::get('/', 'DashboardController@getIndex');
 
-
-Route::group(array('prefix' => 'api/v1' ), function()
-{
-});
-
 /*
  * @author juntriaji
  * Route for API
