@@ -61,6 +61,7 @@ class UploadapiController extends \Controller {
             $is_audio = false;
             $is_video = false;
             $is_pdf = false;
+            $is_doc = false;
 
             $is_image = $this->isImage($filemime);
             $is_audio = $this->isAudio($filemime);
