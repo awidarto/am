@@ -34,6 +34,8 @@ class UploadapiController extends \Controller {
 
         $ns = Input::get('ns');
 
+        $rstring = str_random(15);
+
         $result = '';
 
         $destinationPath = realpath('storage/media').'/'.$rstring;
