@@ -24,6 +24,8 @@ class UploadapiController extends \Controller {
     public function postFile()
     {
 
+        $key = Input::get('key');
+
         $parent_id = Input::get('parid');
 
         $parent_class = Input::get('parclass');
