@@ -38,7 +38,7 @@ class UploadapiController extends \Controller {
 
         $result = '';
 
-        print_r($file);
+        var_dump($_FILES);
 
         die();
 
