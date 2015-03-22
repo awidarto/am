@@ -101,8 +101,8 @@
                     <i class="fa fa-list"></i> Logs <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li class="{{ sa('activity') }}" >
-                        <a href="{{ URL::to('activity') }}" class="{{ sa('activity') }}" ><i class="fa fa-refresh"></i> Audit Trails</a>
+                    <li class="{{ sa('trail') }}" >
+                        <a href="{{ URL::to('trail') }}" class="{{ sa('trail') }}" ><i class="fa fa-refresh"></i> Audit Trails</a>
                     </li>
                     <li class="{{ sa('activity') }}" >
                         <a href="{{ URL::to('activity') }}" class="{{ sa('activity') }}" ><i class="fa fa-refresh"></i> Site Activity</a>

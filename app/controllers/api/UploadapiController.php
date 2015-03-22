@@ -80,6 +80,8 @@ class UploadapiController extends \Controller {
                 $is_doc = false;
             }
 
+            $exif = array();
+
             if($is_image){
 
                 $ps = \Config::get('picture.sizes');
@@ -105,6 +107,9 @@ class UploadapiController extends \Controller {
                     'medium_url'=> \URL::to('storage/media/'.$rstring.'/'.$ps['medium']['prefix'].$filename),
                     'full_url'=> \URL::to('storage/media/'.$rstring.'/'.$ps['full']['prefix'].$filename),
                 );
+
+                $exif = \Image::make($destinationPath.'/'.$filename)
+                    ->exif();
 
             }else{
 

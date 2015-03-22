@@ -31,6 +31,7 @@ Route::controller('assetlocation', 'AssetlocationController');
 Route::controller('rack', 'RackController');
 Route::controller('asset', 'AssetController');
 
+Route::controller('trail', 'TrailController');
 Route::controller('approval', 'ApprovalController');
 Route::controller('activity', 'ActivityController');
 Route::controller('access', 'AccessController');
