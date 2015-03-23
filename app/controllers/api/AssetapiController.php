@@ -329,6 +329,12 @@ class AssetapiController extends \BaseController {
                 $asset->lastUpdate = new \MongoDate( strtotime($json['lastUpdate']) );
             }
 
+            $rack = \Rack::find($data['rackId']);
+
+            if($rack && isset( $rack->SKU ) ){
+                $data['rackName'] = $rack->SKU;
+            }
+
             $asset->save();
 
             $hndata = $asset->toArray();
