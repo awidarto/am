@@ -305,7 +305,7 @@ class AssetapiController extends \BaseController {
 
         \Dumper::insert($json);
 
-        $asset = \Asset::find($id);
+        $asset = \Asset::find($json['extId']);
 
         $asset_id = $id;
 
