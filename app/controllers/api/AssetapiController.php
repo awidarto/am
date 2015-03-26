@@ -249,6 +249,8 @@ class AssetapiController extends \BaseController {
         $hdata['approvalTicket'] = $apvticket;
         \History::insert($hdata);
 
+        //$this->compileDiffs($data['_id']);
+
         $actor = $key;
         \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'post asset'));
 
@@ -355,6 +357,8 @@ class AssetapiController extends \BaseController {
             $hdata['approvalTicket'] = '';
             \History::insert($hdata);
 
+            //$this->compileDiffs($id);
+
 
             $actor = $key;
             \Event::fire('log.api',array($this->controller_name, 'put' ,$actor,'update asset'));
@@ -408,6 +412,8 @@ class AssetapiController extends \BaseController {
             $hdata['approvalTicket'] = $apvticket;
             \History::insert($hdata);
 
+            //$this->compileDiffs($data['_id']);
+
             $actor = $key;
             \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'post asset'));
 
@@ -435,6 +441,94 @@ class AssetapiController extends \BaseController {
 	{
 		//
 	}
+
+    public function compileDiffs($id){
+        $_id = new \MongoId($id);
+
+        $history = \History::where('historyObject._id',$_id)->where('historyObjectType','asset')
+                ->orderBy('historyTimestamp','desc')
+                ->orderBy('historySequence','desc')
+                ->get();
+        $diffs = array();
+
+        foreach($history as $h){
+            $h->date = date( 'Y-m-d H:i:s', $h->historyTimestamp->sec );
+            $diffs[$h->date][$h->historySequence] = $h->historyObject;
+        }
+
+        $history = \History::where('historyObject._id',$_id)->where('historyObjectType','asset')
+                        ->where('historySequence',0)
+                        ->orderBy('historyTimestamp','desc')
+                        ->get();
+
+        foreach($history as $h){
+            $h->historyDiff = ($h->historyAction == 'new')?'NA':$this->objdiff( $diffs[$d], 'array' );
+            $h->save();
+        }
+
+    }
+
+    public function objdiff($obj, $type = null)
+    {
+
+        if(is_array($obj) && count($obj) == 2){
+            $diff = array();
+            foreach ($obj[0] as $key=>$value) {
+                if(isset($obj[0][$key]) && isset($obj[1][$key])){
+                    if($obj[0][$key] !== $obj[1][$key]){
+                        if($key != '_id' && $key != 'createdDate' && $key != 'lastUpdate'){
+                            if(!is_array($obj[0][$key])){
+                                if(is_null($type)){
+                                    $diff[] = $key.' : '. $obj[0][$key].' -> '.$obj[1][$key];
+                                }else{
+                                    $diff[$key] = array('from'=>$obj[0][$key] ,'to'=>$obj[1][$key] );
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+            if(is_null($type)){
+                return implode('<br />', $diff);
+            }else{
+                return $diff;
+            }
+        }else{
+            if(is_null($type)){
+                return 'NA';
+            }else{
+                return array();
+            }
+        }
+    }
+
+    public function ismoving($obj){
+        $location_move = false;
+        $rack_move = false;
+        if(is_array($obj) && count($obj) == 2){
+
+            if(isset($obj[0]['locationId']) && isset($obj[1]['locationId'])){
+                if($obj[0]['locationId'] !== $obj[0]['locationId']){
+                    $location_move = true;
+                }
+            }
+
+            if(isset($obj[0]['rackId']) && isset($obj[1]['rackId'])){
+                if($obj[0]['rackId'] !== $obj[0]['rackId']){
+                    $rack_move = true;
+                }
+            }
+
+            return array(
+                    'location_move'=>$location_move,
+                    'rack_move'=>$rack_move
+                );
+        }else{
+            return 'NA';
+        }
+
+    }
 
 
 }

@@ -62,6 +62,9 @@ class AssetController extends AdminController {
                     ($h->historyAction == 'new')?'NA':$this->objdiff( $diffs[$d] ),
                     $bt_apv
                 );
+
+                $h->historyDiff = ($h->historyAction == 'new')?'NA':$this->objdiff( $diffs[$d], 'array' );
+                $h->save();
         }
 
         $header = array(
@@ -91,7 +94,6 @@ class AssetController extends AdminController {
                     ->with('title','Asset Detail '.$asset->SKU )
                     ->with('table',$itemtable);
     }
-
 
     public function getHistory($id)
     {
@@ -155,7 +157,33 @@ class AssetController extends AdminController {
                     ->with('table',$itemtable);
     }
 
-    public function objdiff($obj)
+    public function compileDiffs($id){
+        $_id = new MongoId($id);
+
+        $history = History::where('historyObject._id',$_id)->where('historyObjectType','asset')
+                ->orderBy('historyTimestamp','desc')
+                ->orderBy('historySequence','desc')
+                ->get();
+        $diffs = array();
+
+        foreach($history as $h){
+            $h->date = date( 'Y-m-d H:i:s', $h->historyTimestamp->sec );
+            $diffs[$h->date][$h->historySequence] = $h->historyObject;
+        }
+
+        $history = History::where('historyObject._id',$_id)->where('historyObjectType','asset')
+                        ->where('historySequence',0)
+                        ->orderBy('historyTimestamp','desc')
+                        ->get();
+
+        foreach($history as $h){
+            $h->historyDiff = ($h->historyAction == 'new')?'NA':$this->objdiff( $diffs[$d], 'array' );
+            $h->save();
+        }
+
+    }
+
+    public function objdiff($obj, $type = null)
     {
 
         if(is_array($obj) && count($obj) == 2){
@@ -165,15 +193,28 @@ class AssetController extends AdminController {
                     if($obj[0][$key] !== $obj[1][$key]){
                         if($key != '_id' && $key != 'createdDate' && $key != 'lastUpdate'){
                             if(!is_array($obj[0][$key])){
-                                $diff[] = $key.' : '. $obj[0][$key].' -> '.$obj[1][$key];
+                                if(is_null($type)){
+                                    $diff[] = $key.' : '. $obj[0][$key].' -> '.$obj[1][$key];
+                                }else{
+                                    $diff[$key] = array('from'=>$obj[0][$key] ,'to'=>$obj[1][$key] );
+                                }
+
                             }
                         }
                     }
                 }
             }
-            return implode('<br />', $diff);
+            if(is_null($type)){
+                return implode('<br />', $diff);
+            }else{
+                return $diff;
+            }
         }else{
-            return 'NA';
+            if(is_null($type)){
+                return 'NA';
+            }else{
+                return array();
+            }
         }
     }
 
@@ -405,6 +446,8 @@ class AssetController extends AdminController {
         $hdata['approvalTicket'] = $apvticket;
         History::insert($hdata);
 
+        $this->compileDiffs($data['_id']);
+
         return $data;
     }
 
@@ -422,6 +465,7 @@ class AssetController extends AdminController {
         $hdata['approvalTicket'] = '';
         History::insert($hdata);
 
+        $this->compileDiffs($id);
 
         return $id;
     }
