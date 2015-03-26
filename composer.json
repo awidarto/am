@@ -21,7 +21,7 @@
         "pingpong/menus": "1.0.*",
         "simplesoftwareio/simple-qrcode": "1.1.*",
         "dinesh/barcode": "dev-master",
-        "creitive/breadcrumbs": "dev-master"
+        "creitive/breadcrumbs": "~1.0"
 	},
 	"autoload": {
 		"classmap": [

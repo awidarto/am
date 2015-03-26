@@ -213,6 +213,8 @@ class AssetapiController extends \BaseController {
 
         $data['_id'] = new \MongoId( $json['extId'] );
 
+        $asset_id = $json['extId'];
+
         if( isset($data['createdDate']) && is_string($data['createdDate'])){
             $data['createdDate'] = new \MongoDate( strtotime($data['createdDate']) );
         }
@@ -228,6 +230,8 @@ class AssetapiController extends \BaseController {
         }
 
         \Asset::insert($data);
+
+        //$asset_id = \Asset::insertGetId($data);
 
 
         //log history
@@ -248,7 +252,7 @@ class AssetapiController extends \BaseController {
         $actor = $key;
         \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'post asset'));
 
-        return \Response::json(array('status'=>'OK', 'timestamp'=>time() ));
+        return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>$asset_id ));
 
 	}
 
@@ -300,6 +304,8 @@ class AssetapiController extends \BaseController {
         \Dumper::insert($json);
 
         $asset = \Asset::find($id);
+
+        $asset_id = $id;
 
         if($asset){
 
@@ -368,6 +374,8 @@ class AssetapiController extends \BaseController {
 
             $data['_id'] = new \MongoId( $json['extId'] );
 
+            $asset_id = $json['extId'];
+
             if( isset($data['createdDate']) && is_string($data['createdDate'])){
                 $data['createdDate'] = new \MongoDate( strtotime($data['createdDate']) );
             }
@@ -403,7 +411,7 @@ class AssetapiController extends \BaseController {
             $actor = $key;
             \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'post asset'));
 
-            return \Response::json(array('status'=>'OK', 'timestamp'=>time() ));
+            return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>$asset_id ));
 
             /*
             $actor = $key;
