@@ -158,6 +158,18 @@ class AssetapiController extends \BaseController {
 
                 unset($assets[$i]->defaultpictures);
 
+                if( isset($assets[$i]->powerStatus) ){
+                    $assets[$i]->powerStatus = ( $assets[$i]->powerStatus == 'yes' || strtolower($assets[$i]->powerStatus) == 'y' || intval($assets[$i]->powerStatus) == 1 )?1:0;
+                }
+
+                if( isset($assets[$i]->labelStatus) ){
+                    $assets[$i]->labelStatus = ( $assets[$i]->labelStatus == 'yes' || strtolower($assets[$i]->labelStatus) == 'y' || intval($assets[$i]->labelStatus) == 1 )?1:0;
+                }
+
+                if( isset($assets[$i]->virtualStatus) ){
+                    $assets[$i]->virtualStatus = ( $assets[$i]->virtualStatus == 'yes' || strtolower($assets[$i]->virtualStatus) == 'y' || intval($assets[$i]->virtualStatus) == 1 )?1:0;
+                }
+
                 if( isset($assets[$i]->createdDate) && !is_string($assets[$i]->createdDate) ){
                     $assets[$i]->createdDate = date('Y-m-d H:i:s',$assets[$i]->createdDate->sec);
                 }

@@ -15,38 +15,38 @@
 </style>
 <dl>
     <dt>Asset Code</dt>
-    <dd>{{ $a->SKU }}</dd>
+    <dd>{{ $a->SKU }}&nbsp;</dd>
     <dt>Status</dt>
-    <dd>{{ $a->status }}</dd>
+    <dd>{{ $a->status }}&nbsp;</dd>
     <dt>Asset Type</dt>
-    <dd>{{ $a->assetType }}</dd>
+    <dd>{{ $a->assetType }}&nbsp;</dd>
     <dt>Location</dt>
-    <dd>{{ $a->locationId }}</dd>
+    <dd>{{ $a->locationId }}&nbsp;</dd>
     <dt>Rack</dt>
-    <dd>{{ $a->rackId }}</dd>
+    <dd>{{ $a->rackId }}&nbsp;</dd>
     <dt>Description</dt>
-    <dd>{{ $a->itemDescription }}</dd>
+    <dd>{{ $a->itemDescription }}&nbsp;</dd>
     <dt>IP</dt>
-    <dd>{{ $a->IP }}</dd>
+    <dd>{{ $a->IP }}&nbsp;</dd>
     <dt>Host Name</dt>
-    <dd>{{ $a->hostName }}</dd>
+    <dd>{{ $a->hostName }}&nbsp;</dd>
     <dt>OS</dt>
-    <dd>{{ $a->OS }}</dd>
+    <dd>{{ $a->OS }}&nbsp;</dd>
     <dt>Power Status</dt>
-    <dd>{{ ($a->powerStatus)?'Yes':'No' }}</dd>
+    <dd>{{ ($a->powerStatus)?'Yes':'No' }}&nbsp;</dd>
     <dt>Label Status</dt>
-    <dd>{{ ($a->labelStatus)?'Yes':'No' }}</dd>
+    <dd>{{ ($a->labelStatus)?'Yes':'No' }}&nbsp;</dd>
     <dt>Virtual Status</dt>
-    <dd>{{ ($a->virtualStatus)?'Yes':'No' }}</dd>
+    <dd>{{ ($a->virtualStatus)?'Yes':'No' }}&nbsp;</dd>
 
     <dt>Owner</dt>
-    <dd>{{ $a->owner }}</dd>
+    <dd>{{ $a->owner }}&nbsp;</dd>
     <dt>PIC</dt>
-    <dd>{{ $a->PIC }}</dd>
+    <dd>{{ $a->PIC }}&nbsp;</dd>
     <dt>Contract Number</dt>
-    <dd>{{ $a->contractNumber }}</dd>
+    <dd>{{ $a->contractNumber }}&nbsp;</dd>
     <dt>Tags</dt>
-    <dd>{{ $a->tags }}</dd>
+    <dd>{{ $a->tags }}&nbsp;</dd>
 
 </dl>
 @if(isset($a->files))
