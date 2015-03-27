@@ -38,6 +38,9 @@ class AssetapiController extends \BaseController {
         'pictureThumbnailUrl'=> 'pictureThumbnailUrl',
         'rackId'=> 'rackId',
         'rackName'=> 'rackName',
+        'powerStatus'=> 'powerStatus',
+        'labelStatus'=>'labelStatus',
+        'virtualStatus'=>'virtualStatus',
         'status'=> 'status',
         'tags'=> 'tags'
 
@@ -235,11 +238,25 @@ class AssetapiController extends \BaseController {
             $data['lastUpdate'] = new \MongoDate( strtotime($data['lastUpdate']) );
         }
 
+        if( isset($data['powerStatus']) ){
+            $data['powerStatus'] = ($data['powerStatus'] == 1)?'yes':'no' ;
+        }
+
+        if( isset($data['labelStatus']) ){
+            $data['labelStatus'] = ($data['labelStatus'] == 1)?'yes':'no' ;
+        }
+
+        if( isset($data['virtualStatus']) ){
+            $data['virtualStatus'] = ($data['virtualStatus'] == 1)?'yes':'no' ;
+        }
+
         $rack = \Rack::find($data['rackId']);
 
         if($rack && isset( $rack->SKU ) ){
             $data['rackName'] = $rack->SKU;
         }
+
+
 
         \Asset::insert($data);
 
@@ -349,6 +366,18 @@ class AssetapiController extends \BaseController {
                 $asset->lastUpdate = new \MongoDate( strtotime($json['lastUpdate']) );
             }
 
+            if( isset($json['powerStatus']) ){
+                $asset->powerStatus = ($json['powerStatus'] == 1)?'yes':'no' ;
+            }
+
+            if( isset($json['labelStatus']) ){
+                $asset->labelStatus = ($json['labelStatus'] == 1)?'yes':'no' ;
+            }
+
+            if( isset($json['virtualStatus']) ){
+                $asset->virtualStatus = ($json['virtualStatus'] == 1)?'yes':'no' ;
+            }
+
             $rack = \Rack::find($data['rackId']);
 
             if($rack && isset( $rack->SKU ) ){
@@ -399,6 +428,19 @@ class AssetapiController extends \BaseController {
             if( isset($data['lastUpdate']) && is_string($data['lastUpdate'])){
                 $data['lastUpdate'] = new \MongoDate( strtotime($data['lastUpdate']) );
             }
+
+            if( isset($data['powerStatus']) ){
+                $data['powerStatus'] = ($data['powerStatus'] == 1)?'yes':'no' ;
+            }
+
+            if( isset($data['labelStatus']) ){
+                $data['labelStatus'] = ($data['labelStatus'] == 1)?'yes':'no' ;
+            }
+
+            if( isset($data['virtualStatus']) ){
+                $data['virtualStatus'] = ($data['virtualStatus'] == 1)?'yes':'no' ;
+            }
+
 
             $rack = \Rack::find($data['rackId']);
 
