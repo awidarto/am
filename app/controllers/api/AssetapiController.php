@@ -379,7 +379,7 @@ class AssetapiController extends \BaseController {
             }
             */
 
-            $rack = \Rack::find($data['rackId']);
+            $rack = \Rack::find($asset->rackId );
 
             if($rack && isset( $rack->SKU ) ){
                 $asset->rackName = $rack->SKU;
