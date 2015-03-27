@@ -366,15 +366,15 @@ class AssetapiController extends \BaseController {
                 $asset->lastUpdate = new \MongoDate( strtotime($json['lastUpdate']) );
             }
 
-            if( isset($json['powerStatus']) ){
+            if( isset($asset->powerStatus) ){
                 $asset->powerStatus = ($json['powerStatus'] == 1)?'yes':'no' ;
             }
 
-            if( isset($json['labelStatus']) ){
+            if( isset($asset->labelStatus) ){
                 $asset->labelStatus = ($json['labelStatus'] == 1)?'yes':'no' ;
             }
 
-            if( isset($json['virtualStatus']) ){
+            if( isset($asset->virtualStatus) ){
                 $asset->virtualStatus = ($json['virtualStatus'] == 1)?'yes':'no' ;
             }
 
