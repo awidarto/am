@@ -430,6 +430,7 @@ class AssetapiController extends \BaseController {
                 $data['lastUpdate'] = new \MongoDate( strtotime($data['lastUpdate']) );
             }
 
+            /*
             if( isset($data['powerStatus']) ){
                 $data['powerStatus'] = ($data['powerStatus'] == 1)?'yes':'no' ;
             }
@@ -441,7 +442,7 @@ class AssetapiController extends \BaseController {
             if( isset($data['virtualStatus']) ){
                 $data['virtualStatus'] = ($data['virtualStatus'] == 1)?'yes':'no' ;
             }
-
+            */
 
             $rack = \Rack::find($data['rackId']);
 
