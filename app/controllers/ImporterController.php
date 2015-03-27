@@ -241,6 +241,19 @@ class ImporterController extends AdminController {
                     ->where($importkey, 'exists', true)
                     ->where($importkey, '=', $rowitem[$importkey])->first();
 
+                if( isset($rowitem['powerStatus']) ){
+                    $rowitem['powerStatus'] = ( strtolower($rowitem['powerStatus']) == 'yes' || strtolower($rowitem['powerStatus']) == 'y' || intval($rowitem['powerStatus']) == 1 )?'yes':'no';
+                }
+
+                if( isset($rowitem['labelStatus']) ){
+                    $rowitem['labelStatus'] = ( strtolower($rowitem['labelStatus']) == 'yes' || strtolower($rowitem['labelStatus']) == 'y' || intval($rowitem['labelStatus']) == 1 )?'yes':'no';
+                }
+
+                if( isset($rowitem['virtualStatus']) ){
+                    $rowitem['virtualStatus'] = ( strtolower($rowitem['virtualStatus']) == 'yes' || strtolower($rowitem['virtualStatus']) == 'y' || intval($rowitem['virtualStatus']) == 1 )?'yes':'no';
+                }
+
+
                 if($obj){
 
                     foreach($rowitem as $k=>$v){
