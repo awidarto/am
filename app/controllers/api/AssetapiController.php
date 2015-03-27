@@ -365,7 +365,7 @@ class AssetapiController extends \BaseController {
             if( isset($asset->lastUpdate) && is_string($asset->lastUpdate)){
                 $asset->lastUpdate = new \MongoDate( strtotime($json['lastUpdate']) );
             }
-
+            /*
             if( isset($asset->powerStatus) ){
                 $asset->powerStatus = ($json['powerStatus'] == 1)?'yes':'no' ;
             }
@@ -377,6 +377,7 @@ class AssetapiController extends \BaseController {
             if( isset($asset->virtualStatus) ){
                 $asset->virtualStatus = ($json['virtualStatus'] == 1)?'yes':'no' ;
             }
+            */
 
             $rack = \Rack::find($data['rackId']);
 
