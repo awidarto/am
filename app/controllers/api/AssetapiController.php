@@ -405,7 +405,7 @@ class AssetapiController extends \BaseController {
             $actor = $key;
             \Event::fire('log.api',array($this->controller_name, 'put' ,$actor,'update asset'));
 
-            return \Response::json(array('status'=>'OK', 'timestamp'=>time() ));
+            return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>$asset_id ));
 
         }else{
 
