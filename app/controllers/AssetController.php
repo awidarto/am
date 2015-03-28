@@ -177,7 +177,7 @@ class AssetController extends AdminController {
                         ->get();
 
         foreach($history as $h){
-            $h->historyDiff = ($h->historyAction == 'new')?'NA':$this->objdiff( $diffs[$d], 'array' );
+            $h->historyDiff = ($h->historyAction == 'new')?'NA':$this->objdiff( $diffs[$h], 'array' );
             $h->save();
         }
 
