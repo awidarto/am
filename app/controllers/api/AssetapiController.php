@@ -115,6 +115,7 @@ class AssetapiController extends \BaseController {
 
                 $pics = \Uploaded::where('parent_id', $assets[$i]->extId)
                                     ->where('parent_class','asset')
+                                    ->where('deleted',0)
                                     ->orderBy('createdDate','desc')
                                     ->get();
 
