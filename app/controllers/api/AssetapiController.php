@@ -324,7 +324,7 @@ class AssetapiController extends \BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update($id = null)
 	{
         $json = \Input::all();
 
@@ -332,157 +332,164 @@ class AssetapiController extends \BaseController {
 
         $json['mode'] = 'edit';
 
+        $batch = \Input::get('batch');
+
         \Dumper::insert($json);
 
-        $asset = \Asset::find($id);
-
-        $asset_id = $id;
-
-        if($asset){
-
-            //create history - before state
-            $hobj = $asset->toArray();
-
-            $apvticket = \Assets::createApprovalRequest('update', $hobj['assetType'],$id, $id );
-
-            $hobj['_id'] = new \MongoId($id);
-
-            $hdata['historyTimestamp'] = new \MongoDate();
-            $hdata['historyAction'] = 'update';
-            $hdata['historySequence'] = 0;
-            $hdata['historyObjectType'] = 'asset';
-            $hdata['historyObject'] = $hobj;
-            $hdata['approvalTicket'] = $apvticket;
-            \History::insert($hdata);
-
-            //update data fields
-            foreach($json as $k=>$v){
-                if(isset($this->objmap[$k])){
-                    $asset->{$this->objmap[$k]} = $v;
-                }
-            }
-
-            if( isset($asset->lastUpdate) && is_string($asset->lastUpdate)){
-                $asset->lastUpdate = new \MongoDate( strtotime($json['lastUpdate']) );
-            }
-            /*
-            if( isset($asset->powerStatus) ){
-                $asset->powerStatus = ($json['powerStatus'] == 1)?'yes':'no' ;
-            }
-
-            if( isset($asset->labelStatus) ){
-                $asset->labelStatus = ($json['labelStatus'] == 1)?'yes':'no' ;
-            }
-
-            if( isset($asset->virtualStatus) ){
-                $asset->virtualStatus = ($json['virtualStatus'] == 1)?'yes':'no' ;
-            }
-            */
-
-            $rack = \Rack::find($asset->rackId );
-
-            if($rack && isset( $rack->SKU ) ){
-                $asset->rackName = $rack->SKU;
-            }
-
-            $asset->save();
-
-            $hndata = $asset->toArray();
-            $hndata['_id'] = new \MongoId($id);
-
-            $hdata = array();
-            $hdata['historyTimestamp'] = new \MongoDate();
-            $hdata['historyAction'] = 'update';
-            $hdata['historySequence'] = 1;
-            $hdata['historyObjectType'] = 'asset';
-            $hdata['historyObject'] = $hndata;
-            $hdata['approvalTicket'] = '';
-            \History::insert($hdata);
-
-            //$this->compileDiffs($id);
-
-
-            $actor = $key;
-            \Event::fire('log.api',array($this->controller_name, 'put' ,$actor,'update asset'));
-
-            return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>$asset_id ));
+        if($batch == 1 && $id == null){
 
         }else{
 
-            $mappeddata = array();
-            foreach($json as $k=>$v){
-                if(isset($this->objmap[$k])){
-                    $mappeddata[ $this->objmap[$k] ] = $v;
+            $asset = \Asset::find($id);
+
+            $asset_id = $id;
+
+            if($asset){
+
+                //create history - before state
+                $hobj = $asset->toArray();
+
+                $apvticket = \Assets::createApprovalRequest('update', $hobj['assetType'],$id, $id );
+
+                $hobj['_id'] = new \MongoId($id);
+
+                $hdata['historyTimestamp'] = new \MongoDate();
+                $hdata['historyAction'] = 'update';
+                $hdata['historySequence'] = 0;
+                $hdata['historyObjectType'] = 'asset';
+                $hdata['historyObject'] = $hobj;
+                $hdata['approvalTicket'] = $apvticket;
+                \History::insert($hdata);
+
+                //update data fields
+                foreach($json as $k=>$v){
+                    if(isset($this->objmap[$k])){
+                        $asset->{$this->objmap[$k]} = $v;
+                    }
                 }
+
+                if( isset($asset->lastUpdate) && is_string($asset->lastUpdate)){
+                    $asset->lastUpdate = new \MongoDate( strtotime($json['lastUpdate']) );
+                }
+                /*
+                if( isset($asset->powerStatus) ){
+                    $asset->powerStatus = ($json['powerStatus'] == 1)?'yes':'no' ;
+                }
+
+                if( isset($asset->labelStatus) ){
+                    $asset->labelStatus = ($json['labelStatus'] == 1)?'yes':'no' ;
+                }
+
+                if( isset($asset->virtualStatus) ){
+                    $asset->virtualStatus = ($json['virtualStatus'] == 1)?'yes':'no' ;
+                }
+                */
+
+                $rack = \Rack::find($asset->rackId );
+
+                if($rack && isset( $rack->SKU ) ){
+                    $asset->rackName = $rack->SKU;
+                }
+
+                $asset->save();
+
+                $hndata = $asset->toArray();
+                $hndata['_id'] = new \MongoId($id);
+
+                $hdata = array();
+                $hdata['historyTimestamp'] = new \MongoDate();
+                $hdata['historyAction'] = 'update';
+                $hdata['historySequence'] = 1;
+                $hdata['historyObjectType'] = 'asset';
+                $hdata['historyObject'] = $hndata;
+                $hdata['approvalTicket'] = '';
+                \History::insert($hdata);
+
+                //$this->compileDiffs($id);
+
+
+                $actor = $key;
+                \Event::fire('log.api',array($this->controller_name, 'put' ,$actor,'update asset'));
+
+                return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>$asset_id ));
+
+            }else{
+
+                $mappeddata = array();
+                foreach($json as $k=>$v){
+                    if(isset($this->objmap[$k])){
+                        $mappeddata[ $this->objmap[$k] ] = $v;
+                    }
+                }
+
+                $data = $mappeddata;
+
+                $data['_id'] = new \MongoId( $json['extId'] );
+
+                $asset_id = $json['extId'];
+
+                if( isset($data['createdDate']) && is_string($data['createdDate'])){
+                    $data['createdDate'] = new \MongoDate( strtotime($data['createdDate']) );
+                }
+
+                if( isset($data['lastUpdate']) && is_string($data['lastUpdate'])){
+                    $data['lastUpdate'] = new \MongoDate( strtotime($data['lastUpdate']) );
+                }
+
+                /*
+                if( isset($data['powerStatus']) ){
+                    $data['powerStatus'] = ($data['powerStatus'] == 1)?'yes':'no' ;
+                }
+
+                if( isset($data['labelStatus']) ){
+                    $data['labelStatus'] = ($data['labelStatus'] == 1)?'yes':'no' ;
+                }
+
+                if( isset($data['virtualStatus']) ){
+                    $data['virtualStatus'] = ($data['virtualStatus'] == 1)?'yes':'no' ;
+                }
+                */
+
+                $rack = \Rack::find($data['rackId']);
+
+                if($rack && isset( $rack->SKU ) ){
+                    $data['rackName'] = $rack->SKU;
+                }
+
+                \Asset::insert($data);
+
+
+                //log history
+
+                //$data is the data after inserted
+
+                $apvticket = \Assets::createApprovalRequest('new', $data['assetType'],$data['_id'], $data['_id'] );
+
+                $hdata = array();
+                $hdata['historyTimestamp'] = new \MongoDate();
+                $hdata['historyAction'] = 'new';
+                $hdata['historySequence'] = 0;
+                $hdata['historyObjectType'] = 'asset';
+                $hdata['historyObject'] = $data;
+                $hdata['approvalTicket'] = $apvticket;
+                \History::insert($hdata);
+
+                //$this->compileDiffs($data['_id']);
+
+                $actor = $key;
+                \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'post asset'));
+
+                return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>$asset_id ));
+
+                /*
+                $actor = $key;
+                \Event::fire('log.api',array($this->controller_name, 'put' ,$actor,'update asset failed'));
+                return \Response::json(array('status'=>'ERR:NOTEXIST', 'timestamp'=>time() ));
+                */
+
             }
-
-            $data = $mappeddata;
-
-            $data['_id'] = new \MongoId( $json['extId'] );
-
-            $asset_id = $json['extId'];
-
-            if( isset($data['createdDate']) && is_string($data['createdDate'])){
-                $data['createdDate'] = new \MongoDate( strtotime($data['createdDate']) );
-            }
-
-            if( isset($data['lastUpdate']) && is_string($data['lastUpdate'])){
-                $data['lastUpdate'] = new \MongoDate( strtotime($data['lastUpdate']) );
-            }
-
-            /*
-            if( isset($data['powerStatus']) ){
-                $data['powerStatus'] = ($data['powerStatus'] == 1)?'yes':'no' ;
-            }
-
-            if( isset($data['labelStatus']) ){
-                $data['labelStatus'] = ($data['labelStatus'] == 1)?'yes':'no' ;
-            }
-
-            if( isset($data['virtualStatus']) ){
-                $data['virtualStatus'] = ($data['virtualStatus'] == 1)?'yes':'no' ;
-            }
-            */
-
-            $rack = \Rack::find($data['rackId']);
-
-            if($rack && isset( $rack->SKU ) ){
-                $data['rackName'] = $rack->SKU;
-            }
-
-            \Asset::insert($data);
-
-
-            //log history
-
-            //$data is the data after inserted
-
-            $apvticket = \Assets::createApprovalRequest('new', $data['assetType'],$data['_id'], $data['_id'] );
-
-            $hdata = array();
-            $hdata['historyTimestamp'] = new \MongoDate();
-            $hdata['historyAction'] = 'new';
-            $hdata['historySequence'] = 0;
-            $hdata['historyObjectType'] = 'asset';
-            $hdata['historyObject'] = $data;
-            $hdata['approvalTicket'] = $apvticket;
-            \History::insert($hdata);
-
-            //$this->compileDiffs($data['_id']);
-
-            $actor = $key;
-            \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'post asset'));
-
-            return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>$asset_id ));
-
-            /*
-            $actor = $key;
-            \Event::fire('log.api',array($this->controller_name, 'put' ,$actor,'update asset failed'));
-            return \Response::json(array('status'=>'ERR:NOTEXIST', 'timestamp'=>time() ));
-            */
 
         }
-
 
 	}
 
