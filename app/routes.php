@@ -64,6 +64,7 @@ Route::group(array('prefix' => 'api/v1'), function (){
     Route::post('/auth/logout', 'Api\AuthController@logout');
     Route::put('/auth/logout', 'Api\AuthController@logout');
     Route::post('/upload', 'Api\UploadapiController@postFile');
+    Route::put('/sync/assets', 'Api\SyncapiController@putAssets');
     Route::resource('img', 'Api\ImgapiController');
     Route::resource('location', 'Api\LocationapiController');
     Route::resource('rack', 'Api\RackapiController');
