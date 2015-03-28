@@ -81,7 +81,7 @@ class AssetController extends AdminController {
 
         $asset = Asset::find($id);
 
-        $files = Uploaded::where('parent_id',$id)->where('parent_class','asset')->get();
+        $files = Uploaded::where('parent_id',$id)->where('parent_class','asset')->where('deleted',0)->get();
 
         $asset->files = $files->toArray();
 
