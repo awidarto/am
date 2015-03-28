@@ -77,8 +77,8 @@ class ImgapiController extends \BaseController {
 
                 $images[$i]->extId = $images[$i]->parentId;
 
-                if(!isset($assets[$i]->deleted)){
-                    $assets[$i]->deleted = 0;
+                if(!isset($images[$i]->deleted)){
+                    $images[$i]->deleted = 0;
                 }
 
                 if( isset($images[$i]->createdDate) && !is_string($images[$i]->createdDate) ){
