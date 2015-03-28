@@ -87,20 +87,20 @@ class ImgapiController extends \BaseController {
                 }
 
                 if(isset($images[$i]->isDoc) && is_bool($images[$i]->isDoc)){
-                    $images[$i]->isDoc = ($images[$i]->isDoc->sec)?1:0;
+                    $images[$i]->isDoc = ($images[$i]->isDoc)?1:0;
                 }
 
                 if(isset($images[$i]->isImage) && is_bool($images[$i]->isImage)){
-                    $images[$i]->isImage = ($images[$i]->isImage->sec)?1:0;
+                    $images[$i]->isImage = ($images[$i]->isImage)?1:0;
                 }
                 if(isset($images[$i]->isVideo) && is_bool($images[$i]->isVideo)){
-                    $images[$i]->isVideo = ($images[$i]->isVideo->sec)?1:0;
+                    $images[$i]->isVideo = ($images[$i]->isVideo)?1:0;
                 }
                 if(isset($images[$i]->isAudio) && is_bool($images[$i]->isAudio)){
-                    $images[$i]->isAudio = ($images[$i]->isAudio->sec)?1:0;
+                    $images[$i]->isAudio = ($images[$i]->isAudio)?1:0;
                 }
                 if(isset($images[$i]->isPdf) && is_bool($images[$i]->isPdf)){
-                    $images[$i]->isPdf = ($images[$i]->isPdf->sec)?1:0;
+                    $images[$i]->isPdf = ($images[$i]->isPdf)?1:0;
                 }
 
         }
