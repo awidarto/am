@@ -53,10 +53,16 @@ class ImgapiController extends \BaseController {
         $class = Input::get('cls');
 
         if(is_null($id) || $id == 'all'){
-            $images = \Uploaded::get();
+            $images = \Uploaded::whereNotNull('parent_id')
+                            ->whereNotNull('parent_class')
+                            ->whereNotNull('extId')
+                            ->get();
         }else{
             $images = \Uploaded::where('parent_id', $id)
                             ->where('parent_class', $class)
+                            ->whereNotNull('parent_id')
+                            ->whereNotNull('parent_class')
+                            ->whereNotNull('extId')
                             ->get();
         }
         for($i = 0; $i < count($images);$i++){
