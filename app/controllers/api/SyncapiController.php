@@ -36,5 +36,44 @@ class SyncapiController extends \Controller {
 
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @return Response
+     */
+    public function putRacks()
+    {
+
+        $json = \Input::all();
+
+        $key = \Input::get('key');
+
+        $json['mode'] = 'edit';
+
+        $batch = \Input::get('batch');
+
+        \Dumper::insert($json);
+
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @return Response
+     */
+    public function putLocations()
+    {
+
+        $json = \Input::all();
+
+        $key = \Input::get('key');
+
+        $json['mode'] = 'edit';
+
+        $batch = \Input::get('batch');
+
+        \Dumper::insert($json);
+
+    }
 
 }

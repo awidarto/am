@@ -42,7 +42,8 @@ class AssetapiController extends \BaseController {
         'labelStatus'=>'labelStatus',
         'virtualStatus'=>'virtualStatus',
         'status'=> 'status',
-        'tags'=> 'tags'
+        'tags'=> 'tags',
+        'deleted'=>'deleted'
 
         //used for internal android app
         /*
