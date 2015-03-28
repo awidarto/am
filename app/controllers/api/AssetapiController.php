@@ -100,6 +100,10 @@ class AssetapiController extends \BaseController {
                 unset($assets[$i]->files);
                 unset($assets[$i]->medium_portrait_url);
 
+                if(!isset($assets[$i]->deleted)){
+                    $assets[$i]->deleted = 0;
+                }
+
                 if(!isset( $assets[$i]->rackName )){
                     $rack = \Rack::find( $assets[$i]->rackId );
 
