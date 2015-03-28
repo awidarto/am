@@ -86,6 +86,23 @@ class ImgapiController extends \BaseController {
                     $images[$i]->lastUpdate = date('Y-m-d H:i:s',$images[$i]->lastUpdate->sec);
                 }
 
+                if(isset($images[$i]->isDoc) && is_bool($images[$i]->isDoc)){
+                    $images[$i]->isDoc = ($images[$i]->isDoc->sec)?1:0;
+                }
+
+                if(isset($images[$i]->isImage) && is_bool($images[$i]->isImage)){
+                    $images[$i]->isImage = ($images[$i]->isImage->sec)?1:0;
+                }
+                if(isset($images[$i]->isVideo) && is_bool($images[$i]->isVideo)){
+                    $images[$i]->isVideo = ($images[$i]->isVideo->sec)?1:0;
+                }
+                if(isset($images[$i]->isAudio) && is_bool($images[$i]->isAudio)){
+                    $images[$i]->isAudio = ($images[$i]->isAudio->sec)?1:0;
+                }
+                if(isset($images[$i]->isPdf) && is_bool($images[$i]->isPdf)){
+                    $images[$i]->isPdf = ($images[$i]->isPdf->sec)?1:0;
+                }
+
         }
 
         $actor = $key;
