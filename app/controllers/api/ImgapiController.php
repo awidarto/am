@@ -76,7 +76,10 @@ class ImgapiController extends \BaseController {
                 unset($images[$i]->delete_type);
 
                 $images[$i]->extId = $images[$i]->parentId;
-                $images[$i]->deleted = 0;
+
+                if(!isset($assets[$i]->deleted)){
+                    $assets[$i]->deleted = 0;
+                }
 
                 if( isset($images[$i]->createdDate) && !is_string($images[$i]->createdDate) ){
                     $images[$i]->createdDate = date('Y-m-d H:i:s',$images[$i]->createdDate->sec);
