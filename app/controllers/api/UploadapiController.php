@@ -44,7 +44,7 @@ class UploadapiController extends \Controller {
 
         $result = '';
 
-        $destinationPath = realpath('storage/media').'/'.$rstring;
+        //$destinationPath = realpath('storage/media').'/'.$rstring;
 
         if(Input::hasFile('imagefile')){
 
