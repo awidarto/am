@@ -10,6 +10,39 @@ class RackapiController extends \BaseController {
 
     public $controller_name = '';
 
+    public $objmap = array(
+
+        'SKU'=> 'SKU',
+        'brc1'=> 'brc1',
+        'brc2'=> 'brc2',
+        'brc3'=> 'brc3',
+        'brchead'=> 'brchead',
+        'contractNumber'=> 'contractNumber',
+        'createdDate'=> 'createdDate',
+        'defaultpic'=> 'defaultpic',
+        'extId'=> 'extId',
+        'itemDescription'=> 'itemDescription',
+        'lastUpdate'=> 'lastUpdate',
+        'locationId'=> 'locationId',
+        'pictureFullUrl'=> 'pictureFullUrl',
+        'pictureLargeUrl'=> 'pictureLargeUrl',
+        'pictureMediumUrl'=> 'pictureMediumUrl',
+        'pictureThumbnailUrl'=> 'pictureThumbnailUrl',
+        'status'=> 'status',
+        'tags'=> 'tags',
+        'deleted'=>'deleted'
+
+        //used for internal android app
+        /*
+        'localEdit'=>'localEdit',
+        'uploaded'=> 'uploaded',
+        'id'=> 'id',
+        'tableName'=> 'ASSET',
+        'query_string'=> 'query_string',
+        'mode'=> 'mode'
+        */
+    );
+
     public function  __construct()
     {
         //$this->model = "Member";
@@ -122,7 +155,6 @@ class RackapiController extends \BaseController {
 	 */
 	public function create()
 	{
-		//
 	}
 
 
@@ -133,7 +165,68 @@ class RackapiController extends \BaseController {
 	 */
 	public function store()
 	{
-		//
+        $json = \Input::all();
+
+        $key = \Input::get('key');
+
+
+        \Dumper::insert($json);
+
+        $mappeddata = array();
+        foreach($json as $k=>$v){
+            if(isset($this->objmap[$k])){
+                $mappeddata[ $this->objmap[$k] ] = $v;
+            }
+        }
+
+        $data = $mappeddata;
+
+        $data['_id'] = new \MongoId( $json['extId'] );
+
+        $rack_id = $json['extId'];
+
+        if( isset($data['createdDate']) && is_string($data['createdDate'])){
+            $data['createdDate'] = new \MongoDate( strtotime($data['createdDate']) );
+        }
+
+        if( isset($data['lastUpdate']) && is_string($data['lastUpdate'])){
+            $data['lastUpdate'] = new \MongoDate( strtotime($data['lastUpdate']) );
+        }
+
+        $location = \Location::find($data['locationId']);
+
+        if($location && isset( $location->name ) ){
+            $data['locationName'] = $location->name;
+        }
+
+
+
+        \Rack::insert($data);
+
+        //$asset_id = \Asset::insertGetId($data);
+
+
+        //log history
+
+        //$data is the data after inserted
+
+        $apvticket = \Assets::createApprovalRequest('new', 'rack' ,$data['_id'], $data['_id'] );
+
+        $hdata = array();
+        $hdata['historyTimestamp'] = new \MongoDate();
+        $hdata['historyAction'] = 'new';
+        $hdata['historySequence'] = 0;
+        $hdata['historyObjectType'] = 'rack';
+        $hdata['historyObject'] = $data;
+        $hdata['approvalTicket'] = $apvticket;
+        \History::insert($hdata);
+
+        //$this->compileDiffs($data['_id']);
+
+        $actor = $key;
+        \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'post rack'));
+
+        return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>$rack_id ));
 	}
 
 
@@ -167,10 +260,140 @@ class RackapiController extends \BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
-	{
-		//
-	}
+    public function update($id)
+    {
+        $json = \Input::all();
+
+        $key = \Input::get('key');
+
+        $json['mode'] = 'edit';
+
+        $batch = \Input::get('batch');
+
+        \Dumper::insert($json);
+
+        $rack = \Rack::find($id);
+
+        $rack_id = $id;
+
+        if($rack){
+
+            //create history - before state
+            $hobj = $rack->toArray();
+
+            $apvticket = \Assets::createApprovalRequest('update', 'rack' ,$id, $id );
+
+            $hobj['_id'] = new \MongoId($id);
+
+            $hdata['historyTimestamp'] = new \MongoDate();
+            $hdata['historyAction'] = 'update';
+            $hdata['historySequence'] = 0;
+            $hdata['historyObjectType'] = 'rack';
+            $hdata['historyObject'] = $hobj;
+            $hdata['approvalTicket'] = $apvticket;
+            \History::insert($hdata);
+
+            //update data fields
+            foreach($json as $k=>$v){
+                if(isset($this->objmap[$k])){
+                    $rack->{$this->objmap[$k]} = $v;
+                }
+            }
+
+            if( isset($rack->lastUpdate) && is_string($rack->lastUpdate)){
+                $rack->lastUpdate = new \MongoDate( strtotime($json['lastUpdate']) );
+            }
+
+            $location = \Location::find($rack->locationId);
+
+            if($location && isset( $location->name ) ){
+                $rack->locationName = $location->name;
+            }
+
+            $rack->save();
+
+            $hndata = $rack->toArray();
+            $hndata['_id'] = new \MongoId($id);
+
+            $hdata = array();
+            $hdata['historyTimestamp'] = new \MongoDate();
+            $hdata['historyAction'] = 'update';
+            $hdata['historySequence'] = 1;
+            $hdata['historyObjectType'] = 'rack';
+            $hdata['historyObject'] = $hndata;
+            $hdata['approvalTicket'] = '';
+            \History::insert($hdata);
+
+            //$this->compileDiffs($id);
+
+
+            $actor = $key;
+            \Event::fire('log.api',array($this->controller_name, 'put' ,$actor,'update rack'));
+
+            return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>$rack_id ));
+
+        }else{
+
+            $mappeddata = array();
+            foreach($json as $k=>$v){
+                if(isset($this->objmap[$k])){
+                    $mappeddata[ $this->objmap[$k] ] = $v;
+                }
+            }
+
+            $data = $mappeddata;
+
+            $data['_id'] = new \MongoId( $json['extId'] );
+
+            $rack_id = $json['extId'];
+
+            if( isset($data['createdDate']) && is_string($data['createdDate'])){
+                $data['createdDate'] = new \MongoDate( strtotime($data['createdDate']) );
+            }
+
+            if( isset($data['lastUpdate']) && is_string($data['lastUpdate'])){
+                $data['lastUpdate'] = new \MongoDate( strtotime($data['lastUpdate']) );
+            }
+
+            $location = \Location::find($data['locationId']);
+
+            if($location && isset( $location->name ) ){
+                $data['locationName'] = $location->name;
+            }
+
+            \Rack::insert($data);
+
+            //log history
+
+            //$data is the data after inserted
+
+            $apvticket = \Assets::createApprovalRequest('new', 'rack' ,$data['_id'], $data['_id'] );
+
+            $hdata = array();
+            $hdata['historyTimestamp'] = new \MongoDate();
+            $hdata['historyAction'] = 'new';
+            $hdata['historySequence'] = 0;
+            $hdata['historyObjectType'] = 'rack';
+            $hdata['historyObject'] = $data;
+            $hdata['approvalTicket'] = $apvticket;
+            \History::insert($hdata);
+
+            //$this->compileDiffs($data['_id']);
+
+            $actor = $key;
+            \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'post rack'));
+
+            return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>$rack_id ));
+
+            /*
+            $actor = $key;
+            \Event::fire('log.api',array($this->controller_name, 'put' ,$actor,'update rack failed'));
+            return \Response::json(array('status'=>'ERR:NOTEXIST', 'timestamp'=>time() ));
+            */
+
+        }
+
+    }
 
 
 	/**
