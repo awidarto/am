@@ -53,7 +53,7 @@ class ImgapiController extends \BaseController {
         $class = Input::get('cls');
 
         if(is_null($id) || $id == 'all'){
-            $cimages = \Uploaded::get();
+            $cimages = \Uploaded::all();
         }else{
             $cimages = \Uploaded::where('parent_id', $id)
                             ->where('parent_class', $class)
