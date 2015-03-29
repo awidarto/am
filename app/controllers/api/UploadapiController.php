@@ -50,8 +50,6 @@ class UploadapiController extends \Controller {
 
             $file = Input::file('imagefile');
 
-            $rstring = str_random(15);
-
             $destinationPath = realpath('storage/media').'/'.$rstring;
 
             $filename = $file->getClientOriginalName();
