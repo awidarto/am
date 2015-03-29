@@ -73,6 +73,8 @@ class AssetapiController extends \BaseController {
 	{
         $key = Input::get('key');
 
+        $user = \Apiauth::user($key);
+
         $assets = \Asset::get();
         for($i = 0; $i < count($assets);$i++){
 
@@ -190,7 +192,7 @@ class AssetapiController extends \BaseController {
 
         }
 
-        $actor = $key;
+        $actor = $user->fullname.' <'.$user->email.'>';
         \Event::fire('log.api',array($this->controller_name, 'get' ,$actor,'get asset list'));
 
         return $assets;
@@ -216,10 +218,12 @@ class AssetapiController extends \BaseController {
 	 */
 	public function store()
 	{
+
+        $key = Input::get('key');
+
+        $user = \Apiauth::user($key);
+
         $json = \Input::all();
-
-        $key = \Input::get('key');
-
 
         \Dumper::insert($json);
 
@@ -292,7 +296,7 @@ class AssetapiController extends \BaseController {
 
         //$this->compileDiffs($data['_id']);
 
-        $actor = $key;
+        $actor = $user->fullname.' <'.$user->email.'>';
         \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'post asset'));
 
         return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>$asset_id ));
@@ -338,9 +342,12 @@ class AssetapiController extends \BaseController {
 	 */
 	public function update($id)
 	{
-        $json = \Input::all();
 
-        $key = \Input::get('key');
+        $key = Input::get('key');
+
+        $user = \Apiauth::user($key);
+
+        $json = \Input::all();
 
         $json['mode'] = 'edit';
 
@@ -424,7 +431,7 @@ class AssetapiController extends \BaseController {
             //$this->compileDiffs($id);
 
 
-            $actor = $key;
+            $actor = $user->fullname.' <'.$user->email.'>';
             \Event::fire('log.api',array($this->controller_name, 'put' ,$actor,'update asset'));
 
             return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>$asset_id ));
@@ -492,7 +499,7 @@ class AssetapiController extends \BaseController {
 
             //$this->compileDiffs($data['_id']);
 
-            $actor = $key;
+            $actor = $user->fullname.' <'.$user->email.'>';
             \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'post asset'));
 
             return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>$asset_id ));

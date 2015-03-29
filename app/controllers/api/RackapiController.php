@@ -58,6 +58,8 @@ class RackapiController extends \BaseController {
 	public function index()
 	{
         $key = Input::get('key');
+
+        $user = \Apiauth::user($key);
 		//
         $locations = \Rack::get();
         for($i = 0; $i < count($locations);$i++){
@@ -150,7 +152,7 @@ class RackapiController extends \BaseController {
 
         }
 
-        $actor = $key;
+        $actor = $user->fullname.' <'.$user->email.'>';
         \Event::fire('log.api',array($this->controller_name, 'get' ,$actor,'rack list'));
 
         return $locations;
@@ -174,10 +176,11 @@ class RackapiController extends \BaseController {
 	 */
 	public function store()
 	{
+        $key = Input::get('key');
+
+        $user = \Apiauth::user($key);
+
         $json = \Input::all();
-
-        $key = \Input::get('key');
-
 
         \Dumper::insert($json);
 
@@ -236,7 +239,7 @@ class RackapiController extends \BaseController {
 
         //$this->compileDiffs($data['_id']);
 
-        $actor = $key;
+        $actor = $user->fullname.' <'.$user->email.'>';
         \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'post rack'));
 
         return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>$rack_id ));
@@ -275,9 +278,12 @@ class RackapiController extends \BaseController {
 	 */
     public function update($id)
     {
-        $json = \Input::all();
 
         $key = \Input::get('key');
+
+        $user = \Apiauth::us($key);
+
+        $json = \Input::all();
 
         $json['mode'] = 'edit';
 
@@ -342,7 +348,7 @@ class RackapiController extends \BaseController {
             //$this->compileDiffs($id);
 
 
-            $actor = $key;
+            $actor = $user->fullname.' <'.$user->email.'>';
             \Event::fire('log.api',array($this->controller_name, 'put' ,$actor,'update rack'));
 
             return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>$rack_id ));
@@ -401,7 +407,7 @@ class RackapiController extends \BaseController {
 
             //$this->compileDiffs($data['_id']);
 
-            $actor = $key;
+            $actor = $user->fullname.' <'.$user->email.'>';
             \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'post rack'));
 
             return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>$rack_id ));

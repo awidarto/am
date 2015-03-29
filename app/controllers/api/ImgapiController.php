@@ -49,6 +49,9 @@ class ImgapiController extends \BaseController {
     public function index()
     {
         $key = Input::get('key');
+
+        $user = \Apiauth::user($key);
+
         $id = Input::get('id');
         $class = Input::get('cls');
 
@@ -121,7 +124,7 @@ class ImgapiController extends \BaseController {
 
         }
 
-        $actor = $key;
+        $actor = $user->fullname.' <'.$user->email.'>';
         \Event::fire('log.api',array($this->controller_name, 'get' ,$actor,'get image list'));
 
         return $images;
@@ -147,6 +150,10 @@ class ImgapiController extends \BaseController {
      */
     public function store()
     {
+        $key = Input::get('key');
+
+        $user = \Apiauth::user($key);
+
         $files = Input::file('files');
 
         $parent_id = Input::get('parid');
@@ -265,7 +272,7 @@ class ImgapiController extends \BaseController {
         }
 
 
-        $actor = $key;
+        $actor = $user->fullname.' <'.$user->email.'>';
         \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'upload image'));
 
         return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>$image_id ));
