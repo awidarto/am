@@ -31,7 +31,7 @@ class LocationapiController extends \BaseController {
         $user = false;
 
         if($user == false){
-            App::abort(403, 'Unauthorized action.');
+            \App::abort(403, 'Unauthorized action.');
         }
 
 		//
