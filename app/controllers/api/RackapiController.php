@@ -196,10 +196,14 @@ class RackapiController extends \BaseController {
 
         if( isset($data['createdDate']) && is_string($data['createdDate'])){
             $data['createdDate'] = new \MongoDate( strtotime($data['createdDate']) );
+        }else{
+            $data['createdDate'] = new \MongoDate();
         }
 
         if( isset($data['lastUpdate']) && is_string($data['lastUpdate'])){
             $data['lastUpdate'] = new \MongoDate( strtotime($data['lastUpdate']) );
+        }else{
+            $data['lastUpdate'] = new \MongoDate();
         }
 
         $location = \Assetlocation::find($data['locationId']);
