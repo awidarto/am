@@ -16,7 +16,7 @@ class Apiauth {
         if($user){
             return $user;
         }else{
-            return false;
+            App::abort(403);
         }
 
     }

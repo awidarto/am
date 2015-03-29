@@ -28,12 +28,6 @@ class LocationapiController extends \BaseController {
 
         $user = \Apiauth::user($key);
 
-        $user = false;
-
-        if($user == false){
-            \App::abort(403, 'Unauthorized action.');
-        }
-
 		//
         $locations = \Assetlocation::get();
         for($i = 0; $i < count($locations);$i++){
