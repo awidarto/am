@@ -315,6 +315,8 @@ class RackapiController extends \BaseController {
 
             if( isset($rack->lastUpdate) && is_string($rack->lastUpdate)){
                 $rack->lastUpdate = new \MongoDate( strtotime($json['lastUpdate']) );
+            }else{
+                $rack->lastUpdate = new \MongoDate( time() );
             }
 
             $location = \Assetlocation::find($rack->locationId);
