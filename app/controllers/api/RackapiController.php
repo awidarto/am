@@ -193,7 +193,7 @@ class RackapiController extends \BaseController {
             $data['lastUpdate'] = new \MongoDate( strtotime($data['lastUpdate']) );
         }
 
-        $location = \Location::find($data['locationId']);
+        $location = \Assetlocation::find($data['locationId']);
 
         if($location && isset( $location->name ) ){
             $data['locationName'] = $location->name;
@@ -304,7 +304,7 @@ class RackapiController extends \BaseController {
                 $rack->lastUpdate = new \MongoDate( strtotime($json['lastUpdate']) );
             }
 
-            $location = \Location::find($rack->locationId);
+            $location = \Assetlocation::find($rack->locationId);
 
             if($location && isset( $location->name ) ){
                 $rack->locationName = $location->name;
@@ -355,7 +355,7 @@ class RackapiController extends \BaseController {
                 $data['lastUpdate'] = new \MongoDate( strtotime($data['lastUpdate']) );
             }
 
-            $location = \Location::find($data['locationId']);
+            $location = \Assetlocation::find($data['locationId']);
 
             if($location && isset( $location->name ) ){
                 $data['locationName'] = $location->name;
