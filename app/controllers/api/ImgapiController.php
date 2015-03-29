@@ -63,7 +63,7 @@ class ImgapiController extends \BaseController {
         $images = array();
 
         for($i = 0; $i < count($cimages);$i++){
-            if( is_null(is_null($cimages[$i]->parent_id) || is_null($cimages[$i]->parent_class) || $cimages[$i]->parent_id == '' || $cimages[$i]->parent_class == '' ){
+            if( is_null($cimages[$i]->parent_id) || is_null($cimages[$i]->parent_class) || $cimages[$i]->parent_id == '' || $cimages[$i]->parent_class == '' ){
 
             }else{
                 $images[] = $cimages[$i];
