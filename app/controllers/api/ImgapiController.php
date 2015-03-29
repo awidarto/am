@@ -53,16 +53,20 @@ class ImgapiController extends \BaseController {
         $class = Input::get('cls');
 
         if(is_null($id) || $id == 'all'){
-            $images = \Uploaded::get();
+            $cimages = \Uploaded::get();
         }else{
-            $images = \Uploaded::where('parent_id', $id)
+            $cimages = \Uploaded::where('parent_id', $id)
                             ->where('parent_class', $class)
                             ->get();
         }
 
-        for($i = 0; $i < count($images);$i++){
-            if( is_null($images[$i]->extId) || is_null($images[$i]->parent_id) || is_null($images[$i]->parent_class) || $images[$i]->extId == '' || $images[$i]->parent_id == '' || $images[$i]->parent_class == '' ){
-                unset($images[$i]);
+        $images = array();
+
+        for($i = 0; $i < count($cimages);$i++){
+            if( is_null($cimages[$i]->extId) || is_null($cimages[$i]->parent_id) || is_null($cimages[$i]->parent_class) || $cimages[$i]->extId == '' || $cimages[$i]->parent_id == '' || $cimages[$i]->parent_class == '' ){
+
+            }else{
+                $images[] = $cimages[$i];
             }
         }
 
