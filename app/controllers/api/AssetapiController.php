@@ -262,7 +262,13 @@ class AssetapiController extends \BaseController {
             $data['rackName'] = $rack->SKU;
         }
 
+        if($rack && isset( $rack->locationName ) ){
+            $data['locationName'] = $rack->locationName;
+        }
 
+        if($rack && isset( $rack->locationId ) ){
+            $data['locationId'] = $rack->locationId;
+        }
 
         \Asset::insert($data);
 
