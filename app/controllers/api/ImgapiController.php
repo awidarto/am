@@ -53,18 +53,19 @@ class ImgapiController extends \BaseController {
         $class = Input::get('cls');
 
         if(is_null($id) || $id == 'all'){
-            $images = \Uploaded::whereNotNull('parent_id')
-                            ->whereNotNull('parent_class')
-                            ->whereNotNull('extId')
-                            ->get();
+            $images = \Uploaded::get();
         }else{
             $images = \Uploaded::where('parent_id', $id)
                             ->where('parent_class', $class)
-                            ->whereNotNull('parent_id')
-                            ->whereNotNull('parent_class')
-                            ->whereNotNull('extId')
                             ->get();
         }
+
+        for($i = 0; $i < count($images);$i++){
+            if( is_null($images[$i]->extId) || is_null($images[$i]->parent_id) || is_null($images[$i]->parent_class) || $images[$i]->extId == '' || $images[$i]->parent_id == '' || $images[$i]->parent_class == '' ){
+                unset($images[$i]);
+            }
+        }
+
         for($i = 0; $i < count($images);$i++){
 
 
@@ -111,6 +112,8 @@ class ImgapiController extends \BaseController {
                 if(isset($images[$i]->isPdf) && is_bool($images[$i]->isPdf)){
                     $images[$i]->isPdf = ($images[$i]->isPdf)?1:0;
                 }
+
+
 
         }
 
