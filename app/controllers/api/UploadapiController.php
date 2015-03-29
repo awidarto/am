@@ -26,6 +26,8 @@ class UploadapiController extends \Controller {
 
         $key = Input::get('key');
 
+        $user = \Apiauth::user($key);
+
         $parent_id = Input::get('parid');
 
         $parent_class = Input::get('parclass');
@@ -170,7 +172,7 @@ class UploadapiController extends \Controller {
                 \Uploaded::insertGetId($item);
             }
 
-            $actor = $key;
+            $actor = $user->fullname.' : '.$user->email;
             \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'upload image'));
 
             return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>$image_id ));
@@ -178,7 +180,7 @@ class UploadapiController extends \Controller {
 
         }
 
-        $actor = $key;
+        $actor = $user->fullname.' : '.$user->email;
         \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'upload image failed'));
 
         return \Response::json(array('status'=>'ERR:NOFILE', 'timestamp'=>time(), 'message'=>$image_id ));
@@ -195,6 +197,8 @@ class UploadapiController extends \Controller {
     {
 
         $key = Input::get('key');
+
+        $user = \Apiauth::user($key);
 
         $parent_id = Input::get('parid');
 
@@ -325,7 +329,7 @@ class UploadapiController extends \Controller {
                 \Uploaded::insertGetId($item);
             }
 
-            $actor = $key;
+            $actor = $user->fullname.' : '.$user->email;
             \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'upload image'));
 
             return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>$image_id ));
@@ -333,7 +337,7 @@ class UploadapiController extends \Controller {
 
         }
 
-        $actor = $key;
+        $actor = $user->fullname.' : '.$user->email;
         \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'upload image failed'));
 
         return \Response::json(array('status'=>'ERR:NOFILE', 'timestamp'=>time(), 'message'=>$image_id ));
