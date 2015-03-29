@@ -399,6 +399,14 @@ class AssetapiController extends \BaseController {
                 $asset->rackName = $rack->SKU;
             }
 
+            if($rack && isset( $rack->locationName ) ){
+                $data['locationName'] = $rack->locationName;
+            }
+
+            if($rack && isset( $rack->locationId ) ){
+                $data['locationId'] = $rack->locationId;
+            }
+
             $asset->save();
 
             $hndata = $asset->toArray();
