@@ -112,7 +112,7 @@ class LocationapiController extends \BaseController {
 
         }
 
-        $actor = $key;
+        $actor = $user->email.' '.$user->fullname;
         \Event::fire('log.api',array($this->controller_name, 'get' ,$actor,'location list'));
 
         return $locations;
