@@ -60,6 +60,8 @@ class ImgapiController extends \BaseController {
                             ->get();
         }
 
+        print_r($cimages);
+
         $images = array();
 
         for($i = 0; $i < count($cimages);$i++){
