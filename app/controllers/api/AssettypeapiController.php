@@ -40,7 +40,7 @@ class AssettypeapiController extends \BaseController {
 
         }
 
-        $actor = $user->fullname.' <'.$user->email.'>';
+        $actor = $user->fullname.' : '.$user->email;
         \Event::fire('log.api',array($this->controller_name, 'get' ,$actor,'rack list'));
 
         return $type;

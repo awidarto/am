@@ -152,7 +152,7 @@ class RackapiController extends \BaseController {
 
         }
 
-        $actor = $user->fullname.' <'.$user->email.'>';
+        $actor = $user->fullname.' : '.$user->email;
         \Event::fire('log.api',array($this->controller_name, 'get' ,$actor,'rack list'));
 
         return $locations;
@@ -239,7 +239,7 @@ class RackapiController extends \BaseController {
 
         //$this->compileDiffs($data['_id']);
 
-        $actor = $user->fullname.' <'.$user->email.'>';
+        $actor = $user->fullname.' : '.$user->email;
         \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'post rack'));
 
         return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>$rack_id ));
@@ -348,7 +348,7 @@ class RackapiController extends \BaseController {
             //$this->compileDiffs($id);
 
 
-            $actor = $user->fullname.' <'.$user->email.'>';
+            $actor = $user->fullname.' : '.$user->email;
             \Event::fire('log.api',array($this->controller_name, 'put' ,$actor,'update rack'));
 
             return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>$rack_id ));
@@ -407,7 +407,7 @@ class RackapiController extends \BaseController {
 
             //$this->compileDiffs($data['_id']);
 
-            $actor = $user->fullname.' <'.$user->email.'>';
+            $actor = $user->fullname.' : '.$user->email;
             \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'post rack'));
 
             return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>$rack_id ));

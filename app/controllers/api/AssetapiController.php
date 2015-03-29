@@ -192,7 +192,7 @@ class AssetapiController extends \BaseController {
 
         }
 
-        $actor = $user->fullname.' <'.$user->email.'>';
+        $actor = $user->fullname.' : '.$user->email;
         \Event::fire('log.api',array($this->controller_name, 'get' ,$actor,'get asset list'));
 
         return $assets;
@@ -296,7 +296,7 @@ class AssetapiController extends \BaseController {
 
         //$this->compileDiffs($data['_id']);
 
-        $actor = $user->fullname.' <'.$user->email.'>';
+        $actor = $user->fullname.' : '.$user->email;
         \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'post asset'));
 
         return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>$asset_id ));
@@ -431,7 +431,7 @@ class AssetapiController extends \BaseController {
             //$this->compileDiffs($id);
 
 
-            $actor = $user->fullname.' <'.$user->email.'>';
+            $actor = $user->fullname.' : '.$user->email;
             \Event::fire('log.api',array($this->controller_name, 'put' ,$actor,'update asset'));
 
             return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>$asset_id ));
@@ -499,7 +499,7 @@ class AssetapiController extends \BaseController {
 
             //$this->compileDiffs($data['_id']);
 
-            $actor = $user->fullname.' <'.$user->email.'>';
+            $actor = $user->fullname.' : '.$user->email;
             \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'post asset'));
 
             return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>$asset_id ));

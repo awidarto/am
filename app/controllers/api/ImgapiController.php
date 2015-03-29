@@ -124,7 +124,7 @@ class ImgapiController extends \BaseController {
 
         }
 
-        $actor = $user->fullname.' <'.$user->email.'>';
+        $actor = $user->fullname.' : '.$user->email;
         \Event::fire('log.api',array($this->controller_name, 'get' ,$actor,'get image list'));
 
         return $images;
@@ -272,7 +272,7 @@ class ImgapiController extends \BaseController {
         }
 
 
-        $actor = $user->fullname.' <'.$user->email.'>';
+        $actor = $user->fullname.' : '.$user->email;
         \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'upload image'));
 
         return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>$image_id ));
