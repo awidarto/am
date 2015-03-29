@@ -25,7 +25,8 @@ class AssettypeapiController extends \BaseController {
 	public function index()
 	{
         $key = Input::get('key');
-		//
+		$user = \Apiauth::user($key);
+
         $type = \Assettype::get();
         for($i = 0; $i < count($type);$i++){
 
@@ -39,7 +40,7 @@ class AssettypeapiController extends \BaseController {
 
         }
 
-        $actor = $key;
+        $actor = $user->fullname.' <'.$user->email.'>';
         \Event::fire('log.api',array($this->controller_name, 'get' ,$actor,'rack list'));
 
         return $type;
