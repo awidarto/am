@@ -136,8 +136,17 @@ class RackapiController extends \BaseController {
                     $locations[$i]->pictureBrc3 = '';
                 }
 
+            if( isset($locations[$i]->createdDate)){
                 $locations[$i]->createdDate = date('Y-m-d H:i:s',$locations[$i]->createdDate->sec);
+            }else{
+                $locations[$i]->createdDate = date('Y-m-d H:i:s',time());
+            }
+
+            if( isset($locations[$i]->lastUpdate)){
                 $locations[$i]->lastUpdate = date('Y-m-d H:i:s',$locations[$i]->lastUpdate->sec);
+            }else{
+                $locations[$i]->lastUpdate = date('Y-m-d H:i:s',time());
+            }
 
         }
 
