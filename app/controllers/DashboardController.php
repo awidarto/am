@@ -495,10 +495,22 @@ class DashboardController extends AdminController {
 
     public function assetName($data)
     {
-        $asset = Asset::find($data['assetId']);
+        if($data['assetType'] == 'asset'){
+            $asset = Asset::find($data['assetId']);
+        }else if($data['assetType'] == 'rack'){
+            $asset = Rack::find($data['assetId']);
+        }else if($data['assetType'] == 'location'){
+            $asset = Assetlocation::find($data['assetId']);
+        }
 
         if($asset){
-            return '<a href="'.URL::to('asset/detail/'.$data['assetId']).'" >'.$asset->SKU.'</a>';
+            if($data['assetType'] == 'asset'){
+                return '<a href="'.URL::to('asset/detail/'.$data['assetId']).'" >'.$asset->SKU.'</a>';
+            }else if($data['assetType'] == 'rack'){
+                return '<a href="'.URL::to('rack/detail/'.$data['assetId']).'" >'.$asset->SKU.'</a>';
+            }else if($data['assetType'] == 'location'){
+                return '<a href="'.URL::to('location/detail/'.$data['assetId']).'" >'.$asset->name.'</a>';
+            }
         }else{
             return '-';
         }
