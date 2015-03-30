@@ -101,7 +101,7 @@ class DashboardController extends AdminController {
 
         $this->fields = array(
             array('approvalStatus',array('kind'=>'text','callback'=>'buttonStatus','query'=>'like','pos'=>'both','show'=>true)),
-            array('assetType',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('assetType',array('kind'=>'text','callback'=>'assetTitle','query'=>'like','pos'=>'both','show'=>true)),
             array('assetId',array('kind'=>'text','callback'=>'assetName','query'=>'like','pos'=>'both','show'=>true)),
             array('actorName',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
             array('requestDate',array('kind'=>'datetime','query'=>'like','pos'=>'both','show'=>true)),
@@ -493,6 +493,11 @@ class DashboardController extends AdminController {
         }else{
             return '<span class="btn btn-info">'.$data['approvalStatus'].'</span>';
         }
+    }
+
+    public function assetTitle($data)
+    {
+        return ucfirst($data['assetType']);
     }
 
     public function assetName($data)
