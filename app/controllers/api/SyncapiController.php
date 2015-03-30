@@ -28,20 +28,21 @@ class SyncapiController extends \Controller {
 
         $key = \Input::get('key');
 
+        $json['mode'] = 'edit';
+
         $batch = \Input::get('batch');
 
         \Dumper::insert($json);
 
         $result = array();
-        if(is_array($json)){
-            foreach($json as $j){
-                $log = \Scanlog::where('logId', $j->logId )->first();
-                if($log){
-                    $result[] = array('status'=>'OK', 'timestamp'=>time(), 'message'=>$j->logId );
-                }else{
-                    \Scanlog::insert($j);
-                    $result[] = array('status'=>'OK', 'timestamp'=>time(), 'message'=>$j->logId );
-                }
+
+        foreach( json_decode($json) as $j){
+            $log = \Scanlog::where('logId', $j['logId'])->first();
+            if($log){
+                $result[] = array('status'=>'OK', 'timestamp'=>time(), 'message'=>$j['logId'] );
+            }else{
+                \Scanlog::insert($j);
+                $result[] = array('status'=>'OK', 'timestamp'=>time(), 'message'=>$j['logId'] );
             }
         }
 
