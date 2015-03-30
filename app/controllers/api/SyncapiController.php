@@ -28,19 +28,16 @@ class SyncapiController extends \Controller {
 
         $key = \Input::get('key');
 
-        $json['mode'] = 'edit';
+        //$json['mode'] = 'edit';
 
         $batch = \Input::get('batch');
-
-        \Dumper::insert($json);
 
         $result = array();
 
         foreach( $json as $j){
-            print_r($j);
-            //\Dumper::insert($j);
 
-            if(isset( $j['logId'])){
+            if(isset( $j['logId'] )){
+
                 $log = \Scanlog::where('logId', $j['logId'] )->first();
 
                 if($log){
@@ -52,9 +49,9 @@ class SyncapiController extends \Controller {
             }
         }
 
-        print_r($result);
+        //print_r($result);
 
-        die();
+        //die();
 
         return Response::json($result);
     }
