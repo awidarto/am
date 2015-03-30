@@ -39,15 +39,15 @@ class SyncapiController extends \Controller {
         foreach( $json as $j){
             print_r($j);
             //\Dumper::insert($j);
-            /*
+
             $log = \Scanlog::where('logId', $j['logId'])->first();
+
             if($log){
                 $result[] = array('status'=>'OK', 'timestamp'=>time(), 'message'=>$j['logId'] );
             }else{
                 \Scanlog::insert($j);
                 $result[] = array('status'=>'OK', 'timestamp'=>time(), 'message'=>$j['logId'] );
             }
-            */
         }
 
         die();
