@@ -178,8 +178,13 @@ class Assets {
             $actor = 'mobile';
             $actorName = 'mobile';
         }else{
-            $actor = Auth::user()->_id;
-            $actorName = Auth::user()->fullname;
+            if($actor == 'user'){
+                $actor = Auth::user()->_id;
+                $actorName = Auth::user()->fullname;
+            }else{
+                $actorName = $actor->fullname;
+                $actor = $actor->_id;
+            }
         }
 
         $data = array(

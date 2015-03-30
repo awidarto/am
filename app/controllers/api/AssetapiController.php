@@ -283,7 +283,7 @@ class AssetapiController extends \BaseController {
 
         //$data is the data after inserted
 
-        $apvticket = \Assets::createApprovalRequest('new', $data['assetType'],$data['_id'], $data['_id'] );
+        $apvticket = \Assets::createApprovalRequest('new', $data['assetType'],$data['_id'], $data['_id'], $user );
 
         $hdata = array();
         $hdata['historyTimestamp'] = new \MongoDate();
@@ -364,7 +364,7 @@ class AssetapiController extends \BaseController {
             //create history - before state
             $hobj = $asset->toArray();
 
-            $apvticket = \Assets::createApprovalRequest('update', $hobj['assetType'],$id, $id );
+            $apvticket = \Assets::createApprovalRequest('update', $hobj['assetType'],$id, $id ,$user);
 
             $hobj['_id'] = new \MongoId($id);
 
@@ -486,7 +486,7 @@ class AssetapiController extends \BaseController {
 
             //$data is the data after inserted
 
-            $apvticket = \Assets::createApprovalRequest('new', $data['assetType'],$data['_id'], $data['_id'] );
+            $apvticket = \Assets::createApprovalRequest('new', $data['assetType'],$data['_id'], $data['_id'],$user );
 
             $hdata = array();
             $hdata['historyTimestamp'] = new \MongoDate();

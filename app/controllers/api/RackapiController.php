@@ -226,7 +226,7 @@ class RackapiController extends \BaseController {
 
         //$data is the data after inserted
 
-        $apvticket = \Assets::createApprovalRequest('new', 'rack' ,$data['_id'], $data['_id'] );
+        $apvticket = \Assets::createApprovalRequest('new', 'rack' ,$data['_id'], $data['_id'], $user);
 
         $hdata = array();
         $hdata['historyTimestamp'] = new \MongoDate();
@@ -300,7 +300,7 @@ class RackapiController extends \BaseController {
             //create history - before state
             $hobj = $rack->toArray();
 
-            $apvticket = \Assets::createApprovalRequest('update', 'rack' ,$id, $id );
+            $apvticket = \Assets::createApprovalRequest('update', 'rack' ,$id, $id, $user );
 
             $hobj['_id'] = new \MongoId($id);
 
@@ -394,7 +394,7 @@ class RackapiController extends \BaseController {
 
             //$data is the data after inserted
 
-            $apvticket = \Assets::createApprovalRequest('new', 'rack' ,$data['_id'], $data['_id'] );
+            $apvticket = \Assets::createApprovalRequest('new', 'rack' ,$data['_id'], $data['_id'], $user );
 
             $hdata = array();
             $hdata['historyTimestamp'] = new \MongoDate();
