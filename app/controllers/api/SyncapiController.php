@@ -40,13 +40,15 @@ class SyncapiController extends \Controller {
             print_r($j);
             //\Dumper::insert($j);
 
-            $log = \Scanlog::where('logId', $j['logId'] )->first();
+            if(isset( $j['logId'])){
+                $log = \Scanlog::where('logId', $j['logId'] )->first();
 
-            if($log){
-                $result[] = array('status'=>'OK', 'timestamp'=>time(), 'message'=>$log->logId );
-            }else{
-                \Scanlog::insert($j);
-                $result[] = array('status'=>'OK', 'timestamp'=>time(), 'message'=>$j['logId'] );
+                if($log){
+                    $result[] = array('status'=>'OK', 'timestamp'=>time(), 'message'=>$j['logId'] );
+                }else{
+                    \Scanlog::insert($j);
+                    $result[] = array('status'=>'OK', 'timestamp'=>time(), 'message'=>$j['logId'] );
+                }
             }
         }
 
