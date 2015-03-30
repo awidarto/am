@@ -104,6 +104,9 @@
                     <li class="{{ sa('trail') }}" >
                         <a href="{{ URL::to('trail') }}" class="{{ sa('trail') }}" ><i class="fa fa-refresh"></i> Audit Trails</a>
                     </li>
+                    <li class="{{ sa('scanlog') }}" >
+                        <a href="{{ URL::to('scanlog') }}" class="{{ sa('scanlog') }}" ><i class="fa fa-refresh"></i> Scan Log</a>
+                    </li>
                     <li class="{{ sa('activity') }}" >
                         <a href="{{ URL::to('activity') }}" class="{{ sa('activity') }}" ><i class="fa fa-refresh"></i> Site Activity</a>
                     </li>

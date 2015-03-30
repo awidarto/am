@@ -35,6 +35,7 @@ Route::controller('trail', 'TrailController');
 Route::controller('approval', 'ApprovalController');
 Route::controller('activity', 'ActivityController');
 Route::controller('access', 'AccessController');
+Route::controller('scanlog', 'ScanlogController');
 Route::controller('apiaccess', 'ApiaccessController');
 
 Route::controller('importer', 'ImporterController');

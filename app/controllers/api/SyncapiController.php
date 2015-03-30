@@ -37,6 +37,9 @@ class SyncapiController extends \Controller {
         foreach( $json as $j){
 
             if(isset( $j['logId'] )){
+                if(isset($j['timestamp'])){
+                    $j['mtimestamp'] = new MongoDate(strtotime($j['timestamp']));
+                }
 
                 $log = \Scanlog::where('logId', $j['logId'] )->first();
 
