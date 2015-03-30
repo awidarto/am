@@ -37,7 +37,7 @@ class SyncapiController extends \Controller {
         $result = array();
 
         foreach( $json as $j){
-            print_r($j);
+            //print_r($j);
             //\Dumper::insert($j);
 
             $log = \Scanlog::where('logId', $j['logId'])->first();
@@ -49,6 +49,8 @@ class SyncapiController extends \Controller {
                 $result[] = array('status'=>'OK', 'timestamp'=>time(), 'message'=>$j['logId'] );
             }
         }
+
+        print_r($result);
 
         die();
 
