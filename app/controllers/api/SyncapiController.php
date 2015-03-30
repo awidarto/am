@@ -28,8 +28,6 @@ class SyncapiController extends \Controller {
 
         $key = \Input::get('key');
 
-        $json['mode'] = 'edit';
-
         $batch = \Input::get('batch');
 
         \Dumper::insert($json);
