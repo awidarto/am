@@ -24,11 +24,11 @@ class SyncapiController extends \Controller {
     public function postScanlog()
     {
 
-        $json = \Input::all();
-
         $key = \Input::get('key');
 
-        //$json['mode'] = 'edit';
+        $user = \Apiauth::user($key);
+
+        $json = \Input::all();
 
         $batch = \Input::get('batch');
 
@@ -52,6 +52,9 @@ class SyncapiController extends \Controller {
         //print_r($result);
 
         //die();
+        $actor = $user->fullname.' : '.$user->email;
+
+        \Event::fire('log.api',array($this->controller_name, 'get' ,$actor,'sync scan log'));
 
         return Response::json($result);
     }
