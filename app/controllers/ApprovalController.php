@@ -125,6 +125,7 @@ class ApprovalController extends AdminController {
             array('Time',array('search'=>true,'sort'=>true,'datetimerange'=>true)),
             array('Change Type',array('search'=>true,'sort'=>false)),
             array('Approval Status',array('search'=>true,'sort'=>false)),
+            array('Asset Type',array('search'=>true,'sort'=>true)),
             array('Asset',array('search'=>true,'sort'=>true)),
             array('Requester',array('search'=>true,'sort'=>true))
         );
@@ -145,6 +146,7 @@ class ApprovalController extends AdminController {
             array('requestDate',array('kind'=>'datetime','query'=>'like','pos'=>'both','show'=>true)),
             array('status',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
             array('approvalStatus',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('assetType',array('kind'=>'text','callback'=>'assetTitle','query'=>'like','pos'=>'both','show'=>true)),
             array('assetId',array('kind'=>'text','callback'=>'dispAsset','query'=>'like','pos'=>'both','show'=>true)),
             array('actor',array('kind'=>'text','callback'=>'dispActor' ,'query'=>'like','pos'=>'both','show'=>true,'attr'=>array('class'=>'expander')))
         );
@@ -165,6 +167,7 @@ class ApprovalController extends AdminController {
             array('Time',array('search'=>true,'sort'=>true,'datetimerange'=>true)),
             array('Change Type',array('search'=>true,'sort'=>false)),
             array('Approval Status',array('search'=>true,'sort'=>false)),
+            array('Asset Type',array('search'=>true,'sort'=>true)),
             array('Asset',array('search'=>true,'sort'=>true)),
             array('Requester',array('search'=>true,'sort'=>true))
         );
@@ -187,6 +190,7 @@ class ApprovalController extends AdminController {
             array('requestDate',array('kind'=>'datetime','query'=>'like','pos'=>'both','show'=>true)),
             array('status',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
             array('approvalStatus',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('assetType',array('kind'=>'text','callback'=>'assetTitle','query'=>'like','pos'=>'both','show'=>true)),
             array('assetId',array('kind'=>'text','callback'=>'dispAsset','query'=>'like','pos'=>'both','show'=>true)),
             array('actor',array('kind'=>'text','callback'=>'dispActor' ,'query'=>'like','pos'=>'both','show'=>true,'attr'=>array('class'=>'expander')))
         );
@@ -299,17 +303,35 @@ class ApprovalController extends AdminController {
         }
     }
 
+    public function assetTitle($data)
+    {
+        return ucfirst($data['assetType']);
+    }
+
     public function dispAsset($data)
     {
-        if($data['assetType'] == 'location'){
-            return 'location';
-        }else if($data['assetType'] == 'rack'){
-            return 'rack';
+        if($data['assetType'] == 'rack'){
+            $asset = Rack::find($data['assetId']);
+        }else if($data['assetType'] == 'location'){
+            $asset = Assetlocation::find($data['assetId']);
         }else{
             $asset = Asset::find($data['assetId']);
-            return (isset($asset->SKU))?$asset->SKU:'';
         }
+
+        if($asset){
+            if($data['assetType'] == 'rack'){
+                return '<a href="'.URL::to('rack/detail/'.$data['assetId']).'" >'.$asset->SKU.'</a>';
+            }else if($data['assetType'] == 'location'){
+                return '<a href="'.URL::to('location/detail/'.$data['assetId']).'" >'.$asset->name.'</a>';
+            }else{
+                return '<a href="'.URL::to('asset/detail/'.$data['assetId']).'" >'.$asset->SKU.'</a>';
+            }
+        }else{
+            return '-';
+        }
+
     }
+
 
     public function dispActor($data)
     {
