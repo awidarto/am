@@ -37,6 +37,7 @@ class SyncapiController extends \Controller {
         $result = array();
 
         foreach( $json as $j){
+            $j = json_decode($j);
             \Dumper::insert($j);
             /*
             $log = \Scanlog::where('logId', $j['logId'])->first();
