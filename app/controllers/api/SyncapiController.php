@@ -38,7 +38,7 @@ class SyncapiController extends \Controller {
 
             if(isset( $j['logId'] )){
                 if(isset($j['timestamp'])){
-                    $j['mtimestamp'] = new MongoDate(strtotime($j['timestamp']));
+                    $j['mtimestamp'] = new \MongoDate(strtotime($j['timestamp']));
                 }
 
                 $log = \Scanlog::where('logId', $j['logId'] )->first();
@@ -55,9 +55,9 @@ class SyncapiController extends \Controller {
         //print_r($result);
 
         //die();
-        $actor = $user->fullname.' : '.$user->email;
+        //$actor = $user->fullname.' : '.$user->email;
 
-        \Event::fire('log.api',array($this->controller_name, 'get' ,$actor,'sync scan log'));
+        //\Event::fire('log.api',array($this->controller_name, 'get' ,$actor,'sync scan log'));
 
         return Response::json($result);
     }
