@@ -36,7 +36,7 @@ class SyncapiController extends \Controller {
 
         $result = array();
 
-        foreach( $json as $j){
+        foreach( $json as $k=>$j){
             $j = json_decode($j);
             \Dumper::insert($j);
             /*
