@@ -37,8 +37,8 @@ class SyncapiController extends \Controller {
         $result = array();
 
         foreach( $json as $j){
-
-            \Dumper::insert($j);
+            print_r($j)
+            //\Dumper::insert($j);
             /*
             $log = \Scanlog::where('logId', $j['logId'])->first();
             if($log){
@@ -49,6 +49,8 @@ class SyncapiController extends \Controller {
             }
             */
         }
+
+        die();
 
         return Response::json($result);
     }
