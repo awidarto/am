@@ -40,6 +40,7 @@ class DashboardController extends AdminController {
             //array('Photos',array('search'=>false,'sort'=>false)),
             array('#',array('search'=>false,'sort'=>false)),
             array('Status',array('search'=>true,'sort'=>true,'select'=>Config::get('shoplite.inventory_status_select') )),
+            array('Type',array('search'=>true,'sort'=>true)),
             array('Asset',array('search'=>true,'sort'=>true)),
             array('Requester',array('search'=>true,'sort'=>true, 'attr'=>array('class'=>'span2'))),
             array('Request Date',array('search'=>true,'sort'=>true ,'attr'=>array('class'=>'')))
@@ -100,6 +101,7 @@ class DashboardController extends AdminController {
 
         $this->fields = array(
             array('approvalStatus',array('kind'=>'text','callback'=>'buttonStatus','query'=>'like','pos'=>'both','show'=>true)),
+            array('assetType',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
             array('assetId',array('kind'=>'text','callback'=>'assetName','query'=>'like','pos'=>'both','show'=>true)),
             array('actorName',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
             array('requestDate',array('kind'=>'datetime','query'=>'like','pos'=>'both','show'=>true)),
