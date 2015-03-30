@@ -281,7 +281,7 @@ class RackapiController extends \BaseController {
 
         $key = \Input::get('key');
 
-        $user = \Apiauth::us($key);
+        $user = \Apiauth::user($key);
 
         $json = \Input::all();
 
