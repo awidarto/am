@@ -21,6 +21,34 @@ class SyncapiController extends \Controller {
      *
      * @return Response
      */
+    public function postScanlog()
+    {
+
+        $json = \Input::all();
+
+        $key = \Input::get('key');
+
+        $json['mode'] = 'edit';
+
+        $batch = \Input::get('batch');
+
+        \Dumper::insert($json);
+
+        $result = array();
+        if(is_array($json)){
+            foreach($json as $j){
+                $result[] = array('status'=>'OK', 'timestamp'=>time(), 'message'=>$j['logId'] );
+            }
+        }
+
+        return Response::json($result);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @return Response
+     */
     public function putAssets()
     {
 

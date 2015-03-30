@@ -25,7 +25,7 @@ class AssettypeapiController extends \BaseController {
 	public function index()
 	{
         $key = Input::get('key');
-		//$user = \Apiauth::user($key);
+		$user = \Apiauth::user($key);
 
         $type = \Assettype::get();
         for($i = 0; $i < count($type);$i++){
