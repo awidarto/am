@@ -190,11 +190,15 @@ class AssetapiController extends \BaseController {
                 }
 
                     foreach($assets[$i]->toArray() as $k=>$v){
-                        if(is_null($v)){
-                            $assets[$i]->{$k} = '';
-                        }
-                        if(is_array($v)){
-                            unset($assets[$i]->{$k});
+                        if($k == 'powerStatus' || $k == 'labelStatus' || $k == 'virtualStatus'){
+                            $assets[$i]->{$k} = 0;
+                        }else{
+                            if(is_null($v)){
+                                $assets[$i]->{$k} = '';
+                            }
+                            if(is_array($v)){
+                                unset($assets[$i]->{$k});
+                            }
                         }
                     }
 
