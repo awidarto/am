@@ -63,6 +63,20 @@ td i.fa{
 td a{
     line-height: 22px;
 }
+
+td{
+    -ms-word-break: break-all;
+
+     /* Be VERY careful with this, breaks normal words wh_erever */
+    word-break: break-all;
+
+     /* Non standard for webkit */
+    word-break: break-word;
+
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    hyphens: auto;
+}
 select.input-sm {
     height: 30px;
     line-height: 30px;

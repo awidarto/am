@@ -27,44 +27,6 @@ class AccessController extends AdminController {
 
     public function getIndex()
     {
-/*
-'REDIRECT_STATUS' => '200',
-  'HTTP_HOST' => 'localhost',
-  'HTTP_CONNECTION' => 'keep-alive',
-  'CONTENT_LENGTH' => '1057',
-  'HTTP_ACCEPT' => 'application/json, text/javascript, *; q=0.01',
-  'HTTP_ORIGIN' => 'http://localhost',
-  'HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest',
-  'HTTP_USER_AGENT' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.77 Safari/537.36',
-  'CONTENT_TYPE' => 'application/x-www-form-urlencoded; charset=UTF-8',
-  'HTTP_REFERER' => 'http://localhost/iadmin/public/agent',
-  'HTTP_ACCEPT_ENCODING' => 'gzip,deflate,sdch',
-  'HTTP_ACCEPT_LANGUAGE' => 'en-US,en;q=0.8,af;q=0.6,da;q=0.4,es;q=0.2,id;q=0.2,ms;q=0.2',
-  'HTTP_COOKIE' => 'stage_jayon_admin=a%3A4%3A%7Bs%3A10%3A%22session_id%22%3Bs%3A32%3A%221e4fd9075855f751c4e7aecd8e90cdc0%22%3Bs%3A10%3A%22ip_address%22%3Bs%3A7%3A%220.0. [...]',
-  'PATH' => '/usr/bin:/bin:/usr/sbin:/sbin',
-  'SERVER_SIGNATURE' =>
-  'SERVER_SOFTWARE' => 'Apache/2.2.24 (Unix) PHP/5.4.13 DAV/2',
-  'SERVER_NAME' => 'localhost',
-  'SERVER_ADDR' => '::1',
-  'SERVER_PORT' => '80',
-  'REMOTE_ADDR' => '::1',
-  'DOCUMENT_ROOT' => '/Library/WebServer/Documents',
-  'SERVER_ADMIN' => 'you@example.com',
-  'SCRIPT_FILENAME' => '/Library/WebServer/Documents/iadmin/public/index.php',
-  'REMOTE_PORT' => '49413',
-  'REDIRECT_URL' => '/iadmin/public/agent',
-  'GATEWAY_INTERFACE' => 'CGI/1.1',
-  'SERVER_PROTOCOL' => 'HTTP/1.1',
-  'REQUEST_METHOD' => 'POST',
-  'QUERY_STRING' => '',
-  'REQUEST_URI' => '/iadmin/public/agent',
-  'SCRIPT_NAME' => '/iadmin/public/index.php',
-  'PHP_SELF' => '/iadmin/public/index.php',
-  'REQUEST_TIME_FLOAT' => 1390369027.802,
-  'REQUEST_TIME' => new MongoInt32(1390369027),
-  'updated_at' => new MongoDate(1390369027, 990000),
-  'created_at' => new MongoDate(1390369027, 990000),
-*/
         $this->heads = array(
             array('REQUEST_TIME',array('search'=>true,'sort'=>true,'datetimerange'=>true)),
             array('HTTP_REFERER',array('search'=>true,'sort'=>false)),
@@ -76,6 +38,8 @@ class AccessController extends AdminController {
         //print $this->model->where('docFormat','picture')->get()->toJSON();
 
         $this->title = 'Site Access';
+
+        $this->place_action = 'none';
 
         return parent::getIndex();
 
@@ -91,6 +55,8 @@ class AccessController extends AdminController {
             array('REMOTE_ADDR',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true,'attr'=>array('class'=>'expander'))),
             array('REDIRECT_STATUS',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
         );
+
+        $this->place_action = 'none';
 
         return parent::postIndex();
     }

@@ -56,6 +56,12 @@ class LocationapiController extends \BaseController {
                 unset($locations[$i]->files);
                 unset($locations[$i]->medium_portrait_url);
 
+                if(isset($locations[$i]->deleted)){
+
+                }else{
+                    $locations[$i]->deleted = 0;
+                }
+
 
                $pics = \Uploaded::where('parent_id', $locations[$i]->extId)
                                     ->where('parent_class','location')

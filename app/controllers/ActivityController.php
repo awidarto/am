@@ -27,31 +27,6 @@ class ActivityController extends AdminController {
 
     public function getIndex()
     {
-        /*
-'activeCart' => '5260f68b8dfa19da49000000',
-'address_1' => 'jl cibaduyut lama komplek sauyunan mas 1 no 19',
-'address_2' => '',
-'agreetnc' => 'Yes',
-'bankname' => 'bca',
-'branch' => 'bandung',
-'city' => 'bandung',
-'country' => 'Indonesia',
-'createdDate' => new MongoDate(1382086083, 795000),
-'email' => 'emptyshalu@gmail.com',
-'firstname' => 'shalu',
-'fullname' => 'shalu hz',
-'lastUpdate' => new MongoDate(1382086083, 795000),
-'lastname' => 'shalu',
-'mobile' => '0818229096',
-'pass' => '$2a$08$9XwvZZVLsHSzu4MIX1ro3.X3cdhK0btglG7qqLGPgOA6/yYz5a51C',
-'role' => 'shopper',
-'salutation' => 'Ms',
-'saveinfo' => 'No',
-'shippingphone' => '02285447649',
-'shopperseq' => '0000000019',
-'zip' => '40235',
-        */
-
 
         $this->heads = array(
             array('Time',array('search'=>true,'sort'=>true,'datetimerange'=>true)),
@@ -64,6 +39,7 @@ class ActivityController extends AdminController {
         //print $this->model->where('docFormat','picture')->get()->toJSON();
 
         $this->title = 'Activity';
+        $this->place_action = 'none';
 
         return parent::getIndex();
 
@@ -82,6 +58,7 @@ class ActivityController extends AdminController {
 
         $this->def_order_by = 'timestamp';
         $this->def_order_dir = 'desc';
+        $this->place_action = 'none';
 
         return parent::postIndex();
     }

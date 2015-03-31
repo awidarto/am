@@ -40,6 +40,7 @@ class ScanlogController extends AdminController {
         //print $this->model->where('docFormat','picture')->get()->toJSON();
 
         $this->title = 'Scan Log';
+        $this->place_action = 'none';
 
         return parent::getIndex();
 
@@ -71,6 +72,8 @@ class ScanlogController extends AdminController {
 
         $this->def_order_by = 'mtimestamp';
         $this->def_order_dir = 'desc';
+
+        $this->place_action = 'none';
 
         return parent::postIndex();
     }
