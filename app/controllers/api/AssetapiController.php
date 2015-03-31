@@ -191,7 +191,7 @@ class AssetapiController extends \BaseController {
 
                     foreach($assets[$i] as $k=>$v){
                         if(is_null($assets[$i]->$k ) || $assets[$i]->$k == '' ){
-                            $assets[$i]->{$k} = ' ';
+                            $assets[$i]->$k = ' ';
                         }
                     }
 
