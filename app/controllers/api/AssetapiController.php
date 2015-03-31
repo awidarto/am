@@ -189,6 +189,12 @@ class AssetapiController extends \BaseController {
                     $assets[$i]->lastUpdate = date('Y-m-d H:i:s',$assets[$i]->lastUpdate->sec);
                 }
 
+                    foreach($assets[$i] as $k=>$v){
+                        if(is_null($assets[$i]->{$k})){
+                            $assets[$i]->{$k} = '';
+                        }
+                    }
+
 
         }
 

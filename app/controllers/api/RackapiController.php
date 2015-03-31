@@ -150,6 +150,12 @@ class RackapiController extends \BaseController {
                 $locations[$i]->lastUpdate = date('Y-m-d H:i:s',time());
             }
 
+                foreach($locations[$i] as $k=>$v){
+                    if(is_null($locations[$i]->{$k})){
+                        $locations[$i]->{$k} = '';
+                    }
+                }
+
         }
 
         $actor = $user->fullname.' : '.$user->email;
