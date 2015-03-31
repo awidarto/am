@@ -60,8 +60,15 @@ class RackapiController extends \BaseController {
         $key = Input::get('key');
 
         $user = \Apiauth::user($key);
-		//
-        $locations = \Rack::get();
+
+        $location_id = Input::get('location');
+
+        if(is_null($rack_id) || $rack_id == 'all'){
+            $locations = \Rack::get();
+        }else{
+            $locations = \Rack::where('locationId',$location_id)->get();
+        }
+
         for($i = 0; $i < count($locations);$i++){
 
                 $locations[$i]->extId = $locations[$i]->_id;
