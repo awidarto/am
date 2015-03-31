@@ -63,7 +63,7 @@ class RackapiController extends \BaseController {
 
         $location_id = Input::get('location');
 
-        if(is_null($rack_id) || $rack_id == 'all'){
+        if(is_null($location_id) || $location_id == 'all'){
             $locations = \Rack::get();
         }else{
             $locations = \Rack::where('locationId',$location_id)->get();
