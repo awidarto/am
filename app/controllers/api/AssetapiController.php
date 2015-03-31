@@ -75,7 +75,14 @@ class AssetapiController extends \BaseController {
 
         $user = \Apiauth::user($key);
 
-        $assets = \Asset::get();
+        $rack_id = Input::get('rack');
+
+        if(is_null($rack_id) || $rack_id == 'all'){
+            $assets = \Asset::get();
+        }else{
+            $assets = \Asset::where('rackId',$rack_id)->get();
+        }
+
         for($i = 0; $i < count($assets);$i++){
 
                 $assets[$i]->extId = $assets[$i]->_id;
