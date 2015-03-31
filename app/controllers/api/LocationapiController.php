@@ -120,6 +120,10 @@ class LocationapiController extends \BaseController {
                         if(is_null($v)){
                             $locations[$i]->{$k} = '';
                         }
+
+                        if(is_array($v)){
+                            unset($locations[$i]->{$k});
+                        }
                     }
         }
 

@@ -193,6 +193,9 @@ class AssetapiController extends \BaseController {
                         if(is_null($v)){
                             $assets[$i]->{$k} = '';
                         }
+                        if(is_array($v)){
+                            unset($assets[$i]->{$k});
+                        }
                     }
 
 
