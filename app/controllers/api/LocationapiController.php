@@ -116,8 +116,8 @@ class LocationapiController extends \BaseController {
                 $locations[$i]->createdDate = date('Y-m-d H:i:s',$locations[$i]->createdDate->sec);
                 $locations[$i]->lastUpdate = date('Y-m-d H:i:s',$locations[$i]->lastUpdate->sec);
 
-                    foreach($locations[$i] as $k=>$v){
-                        if(is_null($locations[$i]->$k ) || $locations[$i]->$k == ''){
+                    foreach($locations[$i]->toArray() as $k=>$v){
+                        if(is_null($v)){
                             $locations[$i]->{$k} = '';
                         }
                     }
