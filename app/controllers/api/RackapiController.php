@@ -151,7 +151,7 @@ class RackapiController extends \BaseController {
             }
 
                 foreach($locations[$i] as $k=>$v){
-                    if(is_null($locations[$i]->{$k})){
+                    if(is_null($locations[$i]->{$k}) || $locations[$i]->{$k} == ''){
                         $locations[$i]->{$k} = '';
                     }
                 }
